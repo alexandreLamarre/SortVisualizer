@@ -19,6 +19,7 @@ class SortVisualizer extends React.Component{
       max_el: 2048,
       num_el: 512,
       data: [], //integer array to be sorted, etc...
+      running: false,
     };
     this.canvas = React.createRef();
   }
@@ -102,8 +103,8 @@ class SortVisualizer extends React.Component{
       ctx.fill();
       ctx.closePath();
       if(highlight === true){
-        const x = xPos;
-        const y = yPos;
+        const x = xPos-6;
+        const y = yPos-6;
         ctx.beginPath();
         ctx.strokeStyle = "rgb(255, 0, 0)";
         ctx.rect(x,y,12,12);
@@ -151,28 +152,28 @@ class SortVisualizer extends React.Component{
     const rand_arr = this.state.data;
     const h = this.state.height;
     const w = this.state.width;
-
+    this.setState({running:true});
+    console.time("javascriptSort")
     const animations = getInsertionSortAnimations(rand_arr.slice());
-    console.log(animations);
+    console.timeEnd("javascriptSort")
     for(let i = 0; i < animations.length; i++){
       if(animations[i].swap !== null && animations[i].swap !== undefined){
         x = setTimeout(() => {
           rand_arr[animations[i].swap[0]] = animations[i].swap[1];
-          this.drawSwirl(rand_arr);
+          this.drawScatter(rand_arr);
         }, i*1)
 
       }
       else if(animations[i].set !== null && animations[i].set !== undefined){
         x = setTimeout(() => {
           rand_arr[animations[i].set[0]] = animations[i].set[1];
-          this.drawSwirl(rand_arr);
+          this.drawScatter(rand_arr);
         }, i*1);
       }
       else if (animations[i].select !== null && animations[i].select !== undefined){
         x = setTimeout(() => {
           const selected = animations[i].select;
-          console.log(selected);
-          this.drawSwirl(rand_arr,w,h, selected);
+          this.drawScatter(rand_arr,w,h, selected);
         }, i*1)
       }
     }
@@ -189,6 +190,14 @@ class SortVisualizer extends React.Component{
       clearInterval(id);
       id --;
     }
+    this.setState({running:false})
+  }
+
+  updateElements(e){
+    e.preventDefault();
+    const new_num_el = parseInt(e.target.value);
+    const that = this;
+    waitUpdateElements(new_num_el, that)
   }
 
   render(){
@@ -197,12 +206,13 @@ class SortVisualizer extends React.Component{
         <Draggable>
           <div className = "infoBox">
           <p> Array Elements
-            <input onChange = {(e) => this.updateElements(e)}
+            <input disabled = {this.state.running === true}
+            onChange = {(e) => this.updateElements(e)}
               type = "range"
               min = {this.state.min_el}
               max = {this.state.max_el}
               value = {this.state.num_el}>
-            </input>: {this.state.num_el} </p>
+            </input> {this.state.num_el} </p>
           <p> Visualization type:
             <select onChange= {(e) => this.changePlotType(e)}>
               <option value="scatter"> Scatter Plot</option>
@@ -210,8 +220,8 @@ class SortVisualizer extends React.Component{
             </select>
           </p>
           <p>
-            Algorithm:
-              <select>
+            Algorithm
+              <select disabled = {this.state.running === true}>
               <optgroup label = "Insertion Family">
                 <option> Insertion Sort</option>
                 <option> Binary Insertion Sort</option>
@@ -241,8 +251,26 @@ class SortVisualizer extends React.Component{
               </optgroup>
               </select>
           </p>
-          <button onClick = {() => this.resetData()}> Reset </button>
-          <button onClick = {() => this.animate()}> Sort! </button>
+          <p> Language
+            <select>
+            <option> Javascript</option>
+            <option> C++ </option>
+            </select>
+          </p>
+          <button
+          onClick = {() => this.resetData()}
+          disabled = {this.state.running === true}>
+             Reset
+           </button>
+          <button
+          onClick = {() => this.animate()}
+          disabled = {this.state.running === true}>
+          Sort!
+          </button>
+          <button
+          onClick = {() => this.clearAnimations()}>
+            Stop
+          </button>
           </div>
         </Draggable>
         <canvas ref = {this.canvas} className = "sortCanvas"></canvas>
@@ -252,3 +280,8 @@ class SortVisualizer extends React.Component{
 }
 
 export default SortVisualizer;
+
+async function waitUpdateElements(val, that){
+  await that.setState({num_el: val});
+  that.resetData();
+}
