@@ -1,0 +1,13 @@
+.infoBox{
+  position:absolute;
+  background-color: #ffffff;
+  color:black;
+  font-size: 12px;
+  max-width: 300px;
+  padding-left: 10px;
+  padding-right: 10px;
+}
+
+.sortCanvas{
+
+}
