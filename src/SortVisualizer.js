@@ -1,5 +1,7 @@
 import React from "react";
 import Draggable from "react-draggable";
+import getMergeSortAnimations from "./SortAlgorithms/Javascript/MergeSort.js";
+import getInsertionSortAnimations from "./SortAlgorithms/Javascript/InsertionSort.js";
 
 import "./SortVisualizer.css";
 
@@ -15,7 +17,7 @@ class SortVisualizer extends React.Component{
       type: {scatter: true, swirl: false},
       min_el: 10,
       max_el: 2048,
-      num_el: 2048,
+      num_el: 512,
       data: [], //integer array to be sorted, etc...
     };
     this.canvas = React.createRef();
@@ -25,10 +27,10 @@ class SortVisualizer extends React.Component{
   Then initialize random data and plot it in default type: scatter plot**/
   componentDidMount(){
     const ctx = this.canvas.current.getContext("2d");
-    const w = window.innerWidth*0.90;
-    const h = window.innerHeight*0.80;
+    const w = window.innerWidth;
+    const h = window.innerHeight;
     ctx.canvas.width = w;
-    ctx.canvas.height = h;
+    ctx.canvas.height = h*0.95;
 
     const rand_arr = [];
     for(let i = 0; i < this.state.num_el; i++){
@@ -40,41 +42,75 @@ class SortVisualizer extends React.Component{
     this.setState({data:rand_arr, width: w, height: h})
   }
 
-  drawScatter(rand_arr, w, h){
+  drawScatter(rand_arr, w, h, selected){
     const ctx = this.canvas.current.getContext("2d");
+    var highlight = false;
     ctx.clearRect(0, 0, w, h);
     for(let i = 0; i < rand_arr.length; i++){
       ctx.beginPath();
+      if(selected !== undefined && selected !== null){
+        for(let j = 0; j < selected.length; j++){
+          if(selected[j] === i) highlight = true;
+        }
+      }
       ctx.fillStyle = "rgb(255,255,255)";
       ctx.arc( ((i+1)/(this.state.num_el))*(w),
-                (h)-rand_arr[i]*h,
+                (h*0.95)-(rand_arr[i]*h+1),
                 1,
                 0,
                 Math.PI*2);
       ctx.fill();
       ctx.closePath();
+      // draw select box
+      if(highlight === true){
+        const x = ((i+1)/(this.state.num_el))*(w) -6;
+        const y = (h*0.95)-(rand_arr[i]*h+1) -6;
+        ctx.beginPath();
+        ctx.strokeStyle = "rgb(255, 0, 0)";
+        ctx.rect(x,y,12,12);
+        ctx.stroke();
+        ctx.closePath();
+        highlight = false;
+      }
     }
   }
 
-  drawSwirl(rand_arr, w ,h){
+  drawSwirl(rand_arr, w ,h, selected){
     const ctx = this.canvas.current.getContext("2d");
+    var highlight = false;
     ctx.clearRect(0, 0, w, h);
     const max_r = Math.min(w/2, h/2);
     const center = {x:w/2,y:h/2};
     console.log("center", center);
     for(let i = 0; i < rand_arr.length; i++){
       ctx.beginPath();
+      if(selected !== undefined && selected !== null){
+        for(let j = 0; j < selected.length; j++){
+          if(selected[j] === i) highlight = true;
+        }
+      }
       ctx.fillStyle = "rgb(255,255,255)";
       const theta = (i/rand_arr.length)*Math.PI*2;
       const r = rand_arr[i]*max_r;
-      ctx.arc(center.x + r*Math.cos(theta),
-              center.y + r*Math.sin(theta),
+      const xPos = center.x + r*Math.cos(theta);
+      const yPos = center.y + r*Math.sin(theta)
+      ctx.arc(xPos,
+              yPos,
               1,
               0,
               2*Math.PI);
       ctx.fill();
       ctx.closePath();
-
+      if(highlight === true){
+        const x = xPos;
+        const y = yPos;
+        ctx.beginPath();
+        ctx.strokeStyle = "rgb(255, 0, 0)";
+        ctx.rect(x,y,12,12);
+        ctx.stroke();
+        ctx.closePath();
+        highlight = false;
+      }
     }
   }
 
@@ -110,19 +146,103 @@ class SortVisualizer extends React.Component{
     }
   }
 
+  animate(){
+    let x = 0;
+    const rand_arr = this.state.data;
+    const h = this.state.height;
+    const w = this.state.width;
+
+    const animations = getInsertionSortAnimations(rand_arr.slice());
+    console.log(animations);
+    for(let i = 0; i < animations.length; i++){
+      if(animations[i].swap !== null && animations[i].swap !== undefined){
+        x = setTimeout(() => {
+          rand_arr[animations[i].swap[0]] = animations[i].swap[1];
+          this.drawSwirl(rand_arr);
+        }, i*1)
+
+      }
+      else if(animations[i].set !== null && animations[i].set !== undefined){
+        x = setTimeout(() => {
+          rand_arr[animations[i].set[0]] = animations[i].set[1];
+          this.drawSwirl(rand_arr);
+        }, i*1);
+      }
+      else if (animations[i].select !== null && animations[i].select !== undefined){
+        x = setTimeout(() => {
+          const selected = animations[i].select;
+          console.log(selected);
+          this.drawSwirl(rand_arr,w,h, selected);
+        }, i*1)
+      }
+    }
+    this.setState({maxtimeouts: x});
+  }
+
+  componentWillUnmount(){
+    this.clearAnimations();
+  }
+
+  clearAnimations(){
+    var id = this.state.maxtimeouts;
+    while(id){
+      clearInterval(id);
+      id --;
+    }
+  }
+
   render(){
     return(
       <div className = "sortContainer">
         <Draggable>
           <div className = "infoBox">
-          <p> Array Elements: {this.state.num_el} </p>
+          <p> Array Elements
+            <input onChange = {(e) => this.updateElements(e)}
+              type = "range"
+              min = {this.state.min_el}
+              max = {this.state.max_el}
+              value = {this.state.num_el}>
+            </input>: {this.state.num_el} </p>
           <p> Visualization type:
             <select onChange= {(e) => this.changePlotType(e)}>
               <option value="scatter"> Scatter Plot</option>
               <option value="swirl"> Swirl Dots</option>
             </select>
           </p>
+          <p>
+            Algorithm:
+              <select>
+              <optgroup label = "Insertion Family">
+                <option> Insertion Sort</option>
+                <option> Binary Insertion Sort</option>
+              </optgroup>
+              <optgroup label = "Merge Family">
+                <option> Merge Sort </option>
+                <option disabled = {true}> In-Place Merge Sort</option>
+              </optgroup>
+              <optgroup label = "Selection Family">
+                <option disabled = {true}> Selection Sort </option>
+                <option disabled = {true}> Max-Heap Sort </option>
+              </optgroup>
+              <optgroup label = "Exchange Family">
+                <option> Quick Sort </option>
+                <option disabled = {true}> Stable Quick Sort </option>
+                <option disabled = {true}> Dual Pivot Quick Sort</option>
+              </optgroup>
+              <optgroup label = "Non-Comparison Family">
+                <option disabled = {true}> Radix LSD Sort, Base 4</option>
+                <option disabled = {true}> Radix MSD Sort, Base 8</option>
+                <option disabled = {true}> In Place Radix LSD Sort, Base 16</option>
+              </optgroup>
+              <optgroup label = "Hybrids">
+                <option> Binary Merge Sort </option>
+                <option> TimSort </option>
+                <option> IntroSort </option>
+              </optgroup>
+              </select>
+          </p>
           <button onClick = {() => this.resetData()}> Reset </button>
+          <button onClick = {() => this.animate()}> Sort! </button>
           </div>
         </Draggable>
         <canvas ref = {this.canvas} className = "sortCanvas"></canvas>
