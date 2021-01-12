@@ -13,7 +13,7 @@ class SortVisualizer extends React.Component{
   constructor(props){
     super(props);
     this.state = {
-      width: 0, height: 0,
+      width: 0, height: 0, maxtimeouts: 0,
       type: {scatter: true, swirl: false},
       min_el: 10,
       max_el: 2048,
@@ -147,37 +147,68 @@ class SortVisualizer extends React.Component{
     }
   }
 
-  animate(){
-    let x = 0;
+  // animate(){
+  //   let x = 0;
+  //   const rand_arr = this.state.data;
+  //   const h = this.state.height;
+  //   const w = this.state.width;
+  //   this.setState({running:true});
+  //   console.time("javascriptSort")
+  //   const animations = getInsertionSortAnimations(rand_arr.slice());
+  //   console.timeEnd("javascriptSort")
+  //   for(let i = 0; i < animations.length; i++){
+  //     if(animations[i].swap !== null && animations[i].swap !== undefined){
+  //       x = setTimeout(() => {
+  //         rand_arr[animations[i].swap[0]] = animations[i].swap[1];
+  //         this.drawScatter(rand_arr);
+  //       }, i*1)
+  //
+  //     }
+  //     else if(animations[i].set !== null && animations[i].set !== undefined){
+  //       x = setTimeout(() => {
+  //         rand_arr[animations[i].set[0]] = animations[i].set[1];
+  //         this.drawScatter(rand_arr);
+  //       }, i*1);
+  //     }
+  //     else if (animations[i].select !== null && animations[i].select !== undefined){
+  //       x = setTimeout(() => {
+  //         const selected = animations[i].select;
+  //         this.drawScatter(rand_arr,w,h, selected);
+  //       }, i*1)
+  //     }
+  //   }
+  //   this.setState({maxtimeouts: x});
+  // }
+
+  startAnimate(){
     const rand_arr = this.state.data;
     const h = this.state.height;
     const w = this.state.width;
-    this.setState({running:true});
-    console.time("javascriptSort")
     const animations = getInsertionSortAnimations(rand_arr.slice());
-    console.timeEnd("javascriptSort")
-    for(let i = 0; i < animations.length; i++){
-      if(animations[i].swap !== null && animations[i].swap !== undefined){
-        x = setTimeout(() => {
-          rand_arr[animations[i].swap[0]] = animations[i].swap[1];
-          this.drawScatter(rand_arr);
-        }, i*1)
+    const that = this;
+    waitStartAnimate(that, rand_arr, w, h, animations, 0) // awaits setting state then starts animation
+    // this.setState({running:true});
+    //
+    // this.animate(rand_arr, w, h, animations, 0);
+  }
 
+  animate(rand_arr, w, h, animations, cur_index){
+    if(this.state.running !== false){
+      var selected = null;
+      if(animations[cur_index].set !== null && animations[cur_index].set !== undefined){
+        rand_arr[animations[cur_index].set[0]] = animations[cur_index].set[1];
       }
-      else if(animations[i].set !== null && animations[i].set !== undefined){
-        x = setTimeout(() => {
-          rand_arr[animations[i].set[0]] = animations[i].set[1];
-          this.drawScatter(rand_arr);
-        }, i*1);
-      }
-      else if (animations[i].select !== null && animations[i].select !== undefined){
-        x = setTimeout(() => {
-          const selected = animations[i].select;
-          this.drawScatter(rand_arr,w,h, selected);
-        }, i*1)
-      }
-    }
-    this.setState({maxtimeouts: x});
+      else if(animations[cur_index].select !== null &&
+                  animations[cur_index].select !== undefined){
+                    selected = animations[cur_index].select;
+                    console.log(selected);
+                  }
+      if(this.state.type.scatter === true) this.drawScatter(rand_arr, w, h, selected);
+      else if(this.state.type.swirl === true) this.drawSwirl(rand_arr, w, h, selected);
+      // continue animation when possible
+      if(cur_index < animations.length) requestAnimationFrame( () => {
+                                            this.animate(rand_arr, w, h, animations, cur_index+1)})
+                                          }
   }
 
   componentWillUnmount(){
@@ -263,7 +294,7 @@ class SortVisualizer extends React.Component{
              Reset
            </button>
           <button
-          onClick = {() => this.animate()}
+          onClick = {() => this.startAnimate()}
           disabled = {this.state.running === true}>
           Sort!
           </button>
@@ -281,7 +312,14 @@ class SortVisualizer extends React.Component{
 
 export default SortVisualizer;
 
+/** ASYNCHRONOUS AND HELPER FUNCTIONS**/
+
 async function waitUpdateElements(val, that){
   await that.setState({num_el: val});
   that.resetData();
+}
+
+async function waitStartAnimate(that, rand_arr, w, h, animations){
+  await that.setState({running:true});
+  that.animate(rand_arr, w, h, animations, 0);
 }
