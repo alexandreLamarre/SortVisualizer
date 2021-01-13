@@ -56,7 +56,7 @@ function mergeSort(arr, l, pivot, r, auxiliary, animations){
     arr[k++] = auxiliary[i++];
   }
 
-  while(j<= pivot){
+  while(j<= r){
     animations.push({swap: null, select: [j,j]});
     animations.push({swap: [k, auxiliary[j]], select: null});
     arr[k++] = auxiliary[j++];

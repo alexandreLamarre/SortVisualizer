@@ -184,7 +184,7 @@ class SortVisualizer extends React.Component{
     const rand_arr = this.state.data;
     const h = this.state.height;
     const w = this.state.width;
-    const animations = getInsertionSortAnimations(rand_arr.slice());
+    const animations = getMergeSortAnimations(rand_arr.slice());
     const that = this;
     waitStartAnimate(that, rand_arr, w, h, animations, 0) // awaits setting state then starts animation
     // this.setState({running:true});
@@ -195,6 +195,9 @@ class SortVisualizer extends React.Component{
   animate(rand_arr, w, h, animations, cur_index){
     if(this.state.running !== false){
       var selected = null;
+      if(animations[cur_index].swap !== null && animations[cur_index].swap !== undefined){
+              rand_arr[animations[cur_index].swap[0]] = animations[cur_index].swap[1];
+          }
       if(animations[cur_index].set !== null && animations[cur_index].set !== undefined){
         rand_arr[animations[cur_index].set[0]] = animations[cur_index].set[1];
       }
@@ -283,7 +286,7 @@ class SortVisualizer extends React.Component{
               </select>
           </p>
           <p> Language
-            <select>
+            <select disabled = {this.state.running === true}>
             <option> Javascript</option>
             <option> C++ </option>
             </select>
