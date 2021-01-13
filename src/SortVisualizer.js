@@ -2,6 +2,7 @@ import React from "react";
 import Draggable from "react-draggable";
 import getMergeSortAnimations from "./SortAlgorithms/Javascript/MergeSort.js";
 import getInsertionSortAnimations from "./SortAlgorithms/Javascript/InsertionSort.js";
+import getQuickSortAnimations from "./SortAlgorithms/Javascript/QuickSort.js";
 
 import "./SortVisualizer.css";
 
@@ -20,6 +21,7 @@ class SortVisualizer extends React.Component{
       num_el: 512,
       data: [], //integer array to be sorted, etc...
       running: false,
+      algorithm: "insertion",
     };
     this.canvas = React.createRef();
   }
@@ -82,7 +84,6 @@ class SortVisualizer extends React.Component{
     ctx.clearRect(0, 0, w, h);
     const max_r = Math.min(w/2, h/2);
     const center = {x:w/2,y:h/2};
-    console.log("center", center);
     for(let i = 0; i < rand_arr.length; i++){
       ctx.beginPath();
       if(selected !== undefined && selected !== null){
@@ -147,44 +148,24 @@ class SortVisualizer extends React.Component{
     }
   }
 
-  // animate(){
-  //   let x = 0;
-  //   const rand_arr = this.state.data;
-  //   const h = this.state.height;
-  //   const w = this.state.width;
-  //   this.setState({running:true});
-  //   console.time("javascriptSort")
-  //   const animations = getInsertionSortAnimations(rand_arr.slice());
-  //   console.timeEnd("javascriptSort")
-  //   for(let i = 0; i < animations.length; i++){
-  //     if(animations[i].swap !== null && animations[i].swap !== undefined){
-  //       x = setTimeout(() => {
-  //         rand_arr[animations[i].swap[0]] = animations[i].swap[1];
-  //         this.drawScatter(rand_arr);
-  //       }, i*1)
-  //
-  //     }
-  //     else if(animations[i].set !== null && animations[i].set !== undefined){
-  //       x = setTimeout(() => {
-  //         rand_arr[animations[i].set[0]] = animations[i].set[1];
-  //         this.drawScatter(rand_arr);
-  //       }, i*1);
-  //     }
-  //     else if (animations[i].select !== null && animations[i].select !== undefined){
-  //       x = setTimeout(() => {
-  //         const selected = animations[i].select;
-  //         this.drawScatter(rand_arr,w,h, selected);
-  //       }, i*1)
-  //     }
-  //   }
-  //   this.setState({maxtimeouts: x});
-  // }
+  setAlgorithm(e){
+    this.setState({algorithm: e.target.value});
+  }
+
+  getAnimations(rand_arr){
+    const algo = this.state.algorithm;
+    if(algo === "insertion") return getInsertionSortAnimations(rand_arr);
+    if(algo === "merge") return getMergeSortAnimations(rand_arr);
+    if(algo === "quick") return getQuickSortAnimations(rand_arr);
+  }
+
 
   startAnimate(){
     const rand_arr = this.state.data;
     const h = this.state.height;
     const w = this.state.width;
-    const animations = getMergeSortAnimations(rand_arr.slice());
+    const animations = this.getAnimations(rand_arr.slice());
+    console.log("animation length", animations.length);
     const that = this;
     waitStartAnimate(that, rand_arr, w, h, animations, 0) // awaits setting state then starts animation
     // this.setState({running:true});
@@ -193,25 +174,32 @@ class SortVisualizer extends React.Component{
   }
 
   animate(rand_arr, w, h, animations, cur_index){
-    if(this.state.running !== false){
+    if(this.state.running !== false && animations[cur_index] !== undefined){
       var selected = null;
       if(animations[cur_index].swap !== null && animations[cur_index].swap !== undefined){
-              rand_arr[animations[cur_index].swap[0]] = animations[cur_index].swap[1];
-          }
+        const [i,j] = animations[cur_index].swap;
+        const temp = rand_arr[i];
+        const temp2 = rand_arr[j];
+        rand_arr[i] = temp2;
+        rand_arr[j] = temp;
+
+      }
       if(animations[cur_index].set !== null && animations[cur_index].set !== undefined){
         rand_arr[animations[cur_index].set[0]] = animations[cur_index].set[1];
       }
-      else if(animations[cur_index].select !== null &&
+      if(animations[cur_index].select !== null &&
                   animations[cur_index].select !== undefined){
                     selected = animations[cur_index].select;
-                    console.log(selected);
                   }
       if(this.state.type.scatter === true) this.drawScatter(rand_arr, w, h, selected);
       else if(this.state.type.swirl === true) this.drawSwirl(rand_arr, w, h, selected);
       // continue animation when possible
       if(cur_index < animations.length) requestAnimationFrame( () => {
                                             this.animate(rand_arr, w, h, animations, cur_index+1)})
-                                          }
+      }
+      else{
+        this.setState({running:false});
+      }
   }
 
   componentWillUnmount(){
@@ -255,13 +243,14 @@ class SortVisualizer extends React.Component{
           </p>
           <p>
             Algorithm
-              <select disabled = {this.state.running === true}>
+              <select disabled = {this.state.running === true}
+              onChange = {(e) => this.setAlgorithm(e)}>
               <optgroup label = "Insertion Family">
-                <option> Insertion Sort</option>
-                <option> Binary Insertion Sort</option>
+                <option value = "insertion"> Insertion Sort</option>
+                <option disabled = {true}> Binary Insertion Sort</option>
               </optgroup>
               <optgroup label = "Merge Family">
-                <option> Merge Sort </option>
+                <option value = "merge"> Merge Sort </option>
                 <option disabled = {true}> In-Place Merge Sort</option>
               </optgroup>
               <optgroup label = "Selection Family">
@@ -269,7 +258,7 @@ class SortVisualizer extends React.Component{
                 <option disabled = {true}> Max-Heap Sort </option>
               </optgroup>
               <optgroup label = "Exchange Family">
-                <option> Quick Sort </option>
+                <option value = "quick"> Quick Sort </option>
                 <option disabled = {true}> Stable Quick Sort </option>
                 <option disabled = {true}> Dual Pivot Quick Sort</option>
               </optgroup>
@@ -279,9 +268,9 @@ class SortVisualizer extends React.Component{
                 <option disabled = {true}> In Place Radix LSD Sort, Base 16</option>
               </optgroup>
               <optgroup label = "Hybrids">
-                <option> Binary Merge Sort </option>
-                <option> TimSort </option>
-                <option> IntroSort </option>
+                <option disabled = {true}> Binary Merge Sort </option>
+                <option disabled = {true}> TimSort </option>
+                <option disabled = {true}> IntroSort </option>
               </optgroup>
               </select>
           </p>
