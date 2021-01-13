@@ -23,6 +23,11 @@ class SortVisualizer extends React.Component{
       data: [], //integer array to be sorted, etc...
       running: false,
       algorithm: "insertion",
+      realTime: 0,
+      comparisons: 0,
+      swaps: 0,
+      mainWrites: 0,
+      auxWrites: 0,
     };
     this.canvas = React.createRef();
   }
@@ -291,10 +296,6 @@ class SortVisualizer extends React.Component{
           disabled = {this.state.running === true}>
           Sort!
           </button>
-          <button
-          onClick = {() => this.clearAnimations()}>
-            Stop
-          </button>
           </div>
         </Draggable>
         <canvas ref = {this.canvas} className = "sortCanvas"></canvas>
@@ -305,6 +306,20 @@ class SortVisualizer extends React.Component{
           className = "githubLinkImg">
           </img>
         </a>
+        <Draggable>
+          <div className = "animationControls" hidden = {this.state.running === false}>
+            <button> Start/Pause </button>
+            <button
+            onClick = {() => this.clearAnimations()}>
+              Stop
+            </button>
+            <div> Actual time to sort (and generate animations) <b> {this.state.realTime} ms</b> </div>
+            <div> <b>{this.state.comparisons}</b> Comparisons </div>
+            <div> <b>{this.state.swaps}</b> Swaps </div>
+            <div> <b>{this.state.mainWrites}</b> Writes to Main Array </div>
+            <div> <b>{this.state.auxWrites}</b> Writes to Auxiliary Array </div>
+          </div>
+        </Draggable>
       </div>
     )
   }

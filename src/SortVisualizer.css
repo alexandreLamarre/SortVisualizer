@@ -1,8 +1,8 @@
 .infoBox{
   cursor: grab;
   position:absolute;
-  background-color: #d3d3d3;
-  color:black;
+  background-color: rgba(211,211,211,0.5);
+  color:white;
   font-size: 12px;
   max-width: 300px;
   padding-left: 10px;
@@ -24,4 +24,21 @@
 .githubLinkImg{
   max-width: 40px;
   max-height: 40px;
+}
+
+
+.animationControls{
+  padding-top: 10px;
+  cursor: grab;
+  position: absolute;
+  background-color: rgb(211,211,211, 0.5);
+  max-width: 300px;
+  max-height: 120px;
+  color:white;
+  left: 40%;
+  top:40%;
+  right: 40%;
+  bottom: 40%;
+  font-size: 12px;
+  height: auto;
 }
