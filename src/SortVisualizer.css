@@ -14,5 +14,14 @@
 
 }
 
-p{
+
+.githubLink{
+  position: absolute;
+  right: 0;
+  top: 0;
+}
+
+.githubLinkImg{
+  max-width: 40px;
+  max-height: 40px;
 }

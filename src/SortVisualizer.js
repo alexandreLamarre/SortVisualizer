@@ -3,6 +3,7 @@ import Draggable from "react-draggable";
 import getMergeSortAnimations from "./SortAlgorithms/Javascript/MergeSort.js";
 import getInsertionSortAnimations from "./SortAlgorithms/Javascript/InsertionSort.js";
 import getQuickSortAnimations from "./SortAlgorithms/Javascript/QuickSort.js";
+import githubLink from "./githubLink.png";
 
 import "./SortVisualizer.css";
 
@@ -227,14 +228,20 @@ class SortVisualizer extends React.Component{
       <div className = "sortContainer">
         <Draggable>
           <div className = "infoBox">
-          <p> Array Elements
+          <p> Data Elements
             <input disabled = {this.state.running === true}
             onChange = {(e) => this.updateElements(e)}
               type = "range"
               min = {this.state.min_el}
               max = {this.state.max_el}
               value = {this.state.num_el}>
-            </input> {this.state.num_el} </p>
+            </input> {this.state.num_el}
+            <button
+            onClick = {() => this.resetData()}
+            disabled = {this.state.running === true}>
+               Reset
+             </button>
+          </p>
           <p> Visualization type:
             <select onChange= {(e) => this.changePlotType(e)}>
               <option value="scatter"> Scatter Plot</option>
@@ -259,7 +266,6 @@ class SortVisualizer extends React.Component{
               </optgroup>
               <optgroup label = "Exchange Family">
                 <option value = "quick"> Quick Sort </option>
-                <option disabled = {true}> Stable Quick Sort </option>
                 <option disabled = {true}> Dual Pivot Quick Sort</option>
               </optgroup>
               <optgroup label = "Non-Comparison Family">
@@ -281,11 +287,6 @@ class SortVisualizer extends React.Component{
             </select>
           </p>
           <button
-          onClick = {() => this.resetData()}
-          disabled = {this.state.running === true}>
-             Reset
-           </button>
-          <button
           onClick = {() => this.startAnimate()}
           disabled = {this.state.running === true}>
           Sort!
@@ -297,6 +298,13 @@ class SortVisualizer extends React.Component{
           </div>
         </Draggable>
         <canvas ref = {this.canvas} className = "sortCanvas"></canvas>
+        <a className = "githubLink"
+        href = "https://github.com/alexandreLamarre/SortVisualizer"
+        target = "_blank">
+          <img src ={githubLink}
+          className = "githubLinkImg">
+          </img>
+        </a>
       </div>
     )
   }
