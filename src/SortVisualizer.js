@@ -4,6 +4,7 @@ import getMergeSortAnimations from "./SortAlgorithms/Javascript/MergeSort.js";
 import getInsertionSortAnimations from "./SortAlgorithms/Javascript/InsertionSort.js";
 import getQuickSortAnimations from "./SortAlgorithms/Javascript/QuickSort.js";
 import getDualQuickSortAnimations from "./SortAlgorithms/Javascript/DualQuickSort.js";
+import getSelectionSortAnimations from "./SortAlgorithms/Javascript/SelectionSort.js";
 import githubLink from "./githubLink.png";
 
 import "./SortVisualizer.css";
@@ -73,7 +74,7 @@ class SortVisualizer extends React.Component{
       }
       ctx.fillStyle = "rgb(255,255,255)";
       ctx.arc( ((i+1)/(this.state.num_el))*(w),
-                (h*0.95)-(rand_arr[i]*h+1),
+                (h*0.95)-(rand_arr[i]*(h*0.95)+1),
                 1,
                 0,
                 Math.PI*2);
@@ -82,7 +83,7 @@ class SortVisualizer extends React.Component{
       // draw select box
       if(highlight === true){
         const x = ((i+1)/(this.state.num_el))*(w) -6;
-        const y = (h*0.95)-(rand_arr[i]*h+1) -6;
+        const y = (h*0.95)-(rand_arr[i]*h*0.95+1) -6;
         ctx.beginPath();
         ctx.strokeStyle = "rgb(255, 0, 0)";
         ctx.rect(x,y,12,12);
@@ -227,6 +228,7 @@ class SortVisualizer extends React.Component{
     if(algo === "merge") return getMergeSortAnimations(rand_arr);
     if(algo === "quick") return getQuickSortAnimations(rand_arr);
     if(algo === "dualquick") return getDualQuickSortAnimations(rand_arr);
+    if(algo === "selection") return getSelectionSortAnimations(rand_arr);
   }
 
 
@@ -331,7 +333,7 @@ class SortVisualizer extends React.Component{
                 <option disabled = {true}> In-Place Merge Sort</option>
               </optgroup>
               <optgroup label = "Selection Family">
-                <option disabled = {true}> Selection Sort </option>
+                <option value = "selection"> Selection Sort </option>
                 <option disabled = {true}> Max-Heap Sort </option>
               </optgroup>
               <optgroup label = "Exchange Family">
