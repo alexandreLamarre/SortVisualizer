@@ -28,17 +28,14 @@
 
 
 .animationControls{
-  padding-top: 10px;
   cursor: grab;
   position: absolute;
   background-color: rgb(211,211,211, 0.5);
   max-width: 300px;
-  max-height: 120px;
   color:white;
-  left: 40%;
-  top:40%;
-  right: 40%;
-  bottom: 40%;
   font-size: 12px;
-  height: auto;
+  padding-top: 10px;
+  padding-left: 10px;
+  padding-right: 10px;
+  padding-bottom: 10px;
 }

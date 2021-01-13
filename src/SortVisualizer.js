@@ -3,6 +3,7 @@ import Draggable from "react-draggable";
 import getMergeSortAnimations from "./SortAlgorithms/Javascript/MergeSort.js";
 import getInsertionSortAnimations from "./SortAlgorithms/Javascript/InsertionSort.js";
 import getQuickSortAnimations from "./SortAlgorithms/Javascript/QuickSort.js";
+import getDualQuickSortAnimations from "./SortAlgorithms/Javascript/DualQuickSort.js";
 import githubLink from "./githubLink.png";
 
 import "./SortVisualizer.css";
@@ -16,7 +17,7 @@ class SortVisualizer extends React.Component{
     super(props);
     this.state = {
       width: 0, height: 0, maxtimeouts: 0,
-      type: {scatter: true, swirl: false},
+      type: "scatter",
       min_el: 10,
       max_el: 2048,
       num_el: 512,
@@ -45,9 +46,9 @@ class SortVisualizer extends React.Component{
     for(let i = 0; i < this.state.num_el; i++){
       rand_arr.push(Math.random());
     }
-    if(this.state.type.scatter === true) this.drawScatter(rand_arr, w, h);
+    if(this.state.type === "scatter") this.drawScatter(rand_arr, w, h);
 
-    else if (this.state.type.swirl === true) this.drawSwirl(rand_arr, w, h);
+    else if (this.state.type === "swirl") this.drawSwirl(rand_arr, w, h);
     this.setState({data:rand_arr, width: w, height: h})
   }
 
@@ -133,8 +134,8 @@ class SortVisualizer extends React.Component{
     for(let i = 0; i < this.state.num_el; i++){
       rand_arr.push(Math.random());
     }
-    if(this.state.type.scatter === true) this.drawScatter(rand_arr, w, h);
-    else if(this.state.type.swirl === true) this.drawSwirl(rand_arr, w, h);
+    if(this.state.type === "scatter") this.drawScatter(rand_arr, w, h);
+    else if(this.state.type === "swirl") this.drawSwirl(rand_arr, w, h);
     this.setState({data:rand_arr});
     //draw new random data in swirl dot plot
 
@@ -145,11 +146,11 @@ class SortVisualizer extends React.Component{
     const h = this.state.height;
 
     if(e.target.value === "scatter"){
-      this.setState({type:{scatter:true, swirl:false}});
+      this.setState({type: e.target.value});
       this.drawScatter(this.state.data, w,h);
     }
     else if(e.target.value === "swirl"){
-      this.setState({type:{scatter:false, swirl:true}});
+      this.setState({type: e.target.value});
       this.drawSwirl(this.state.data, w, h);
     }
   }
@@ -163,6 +164,7 @@ class SortVisualizer extends React.Component{
     if(algo === "insertion") return getInsertionSortAnimations(rand_arr);
     if(algo === "merge") return getMergeSortAnimations(rand_arr);
     if(algo === "quick") return getQuickSortAnimations(rand_arr);
+    if(algo === "dualquick") return getDualQuickSortAnimations(rand_arr);
   }
 
 
@@ -170,13 +172,13 @@ class SortVisualizer extends React.Component{
     const rand_arr = this.state.data;
     const h = this.state.height;
     const w = this.state.width;
+    var start = Date.now();
     const animations = this.getAnimations(rand_arr.slice());
-    console.log("animation length", animations.length);
+    var end = Date.now();
+    var time = parseFloat(end - start);
+    console.log("animation length", animations.length, "time", time);
     const that = this;
-    waitStartAnimate(that, rand_arr, w, h, animations, 0) // awaits setting state then starts animation
-    // this.setState({running:true});
-    //
-    // this.animate(rand_arr, w, h, animations, 0);
+    waitStartAnimate(that, rand_arr, w, h, animations, time) // awaits setting state then starts animation
   }
 
   animate(rand_arr, w, h, animations, cur_index){
@@ -197,8 +199,8 @@ class SortVisualizer extends React.Component{
                   animations[cur_index].select !== undefined){
                     selected = animations[cur_index].select;
                   }
-      if(this.state.type.scatter === true) this.drawScatter(rand_arr, w, h, selected);
-      else if(this.state.type.swirl === true) this.drawSwirl(rand_arr, w, h, selected);
+      if(this.state.type === "scatter") this.drawScatter(rand_arr, w, h, selected);
+      else if(this.state.type === "swirl") this.drawSwirl(rand_arr, w, h, selected);
       // continue animation when possible
       if(cur_index < animations.length) requestAnimationFrame( () => {
                                             this.animate(rand_arr, w, h, animations, cur_index+1)})
@@ -232,7 +234,7 @@ class SortVisualizer extends React.Component{
     return(
       <div className = "sortContainer">
         <Draggable>
-          <div className = "infoBox">
+          <div className = "infoBox" hidden = {this.state.running === true}>
           <p> Data Elements
             <input disabled = {this.state.running === true}
             onChange = {(e) => this.updateElements(e)}
@@ -248,7 +250,8 @@ class SortVisualizer extends React.Component{
              </button>
           </p>
           <p> Visualization type:
-            <select onChange= {(e) => this.changePlotType(e)}>
+            <select onChange= {(e) => this.changePlotType(e)}
+                    value = {this.state.type}>
               <option value="scatter"> Scatter Plot</option>
               <option value="swirl"> Swirl Dots</option>
             </select>
@@ -271,7 +274,7 @@ class SortVisualizer extends React.Component{
               </optgroup>
               <optgroup label = "Exchange Family">
                 <option value = "quick"> Quick Sort </option>
-                <option disabled = {true}> Dual Pivot Quick Sort</option>
+                <option value = "dualquick"> Dual Pivot Quick Sort</option>
               </optgroup>
               <optgroup label = "Non-Comparison Family">
                 <option disabled = {true}> Radix LSD Sort, Base 4</option>
@@ -298,6 +301,27 @@ class SortVisualizer extends React.Component{
           </button>
           </div>
         </Draggable>
+        <Draggable>
+          <div className = "animationControls" hidden = {this.state.running === false}>
+            <button> Start/Pause </button>
+            <button
+            onClick = {() => this.clearAnimations()}>
+              Stop
+            </button>
+            <p> Visualization type:
+              <select onChange= {(e) => this.changePlotType(e)}
+                      value = {this.state.type}>
+                <option value="scatter"> Scatter Plot</option>
+                <option value="swirl"> Swirl Dots</option>
+              </select>
+            </p>
+            <div> Real sorting time (with animations) <b> {this.state.realTime} ms</b> </div>
+            <div> <b>{this.state.comparisons}</b> Comparisons </div>
+            <div> <b>{this.state.swaps}</b> Swaps </div>
+            <div> <b>{this.state.mainWrites}</b> Writes to Main Array </div>
+            <div> <b>{this.state.auxWrites}</b> Writes to Auxiliary Array </div>
+          </div>
+        </Draggable>
         <canvas ref = {this.canvas} className = "sortCanvas"></canvas>
         <a className = "githubLink"
         href = "https://github.com/alexandreLamarre/SortVisualizer"
@@ -306,20 +330,7 @@ class SortVisualizer extends React.Component{
           className = "githubLinkImg">
           </img>
         </a>
-        <Draggable>
-          <div className = "animationControls" hidden = {this.state.running === false}>
-            <button> Start/Pause </button>
-            <button
-            onClick = {() => this.clearAnimations()}>
-              Stop
-            </button>
-            <div> Actual time to sort (and generate animations) <b> {this.state.realTime} ms</b> </div>
-            <div> <b>{this.state.comparisons}</b> Comparisons </div>
-            <div> <b>{this.state.swaps}</b> Swaps </div>
-            <div> <b>{this.state.mainWrites}</b> Writes to Main Array </div>
-            <div> <b>{this.state.auxWrites}</b> Writes to Auxiliary Array </div>
-          </div>
-        </Draggable>
+
       </div>
     )
   }
@@ -334,7 +345,10 @@ async function waitUpdateElements(val, that){
   that.resetData();
 }
 
-async function waitStartAnimate(that, rand_arr, w, h, animations){
-  await that.setState({running:true});
+async function waitStartAnimate(that, rand_arr, w, h, animations, time){
+  await that.setState({running:true,
+    mainWrites: 0, auxWrites: 0,
+    comparions: 0, realTime:time,
+    swaps: 0});
   that.animate(rand_arr, w, h, animations, 0);
 }

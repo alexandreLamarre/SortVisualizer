@@ -9,10 +9,6 @@ export default function getQuickSortAnimations(rand_arr){
   return animations;
 }
 
-/**
-
-**/
-
 
 /**
 
@@ -26,6 +22,9 @@ function quickSort(arr, l, r, animations){
   }
 }
 
+/**
+
+**/
 function partition(arr, l, r, animations){
   var pivot = arr[r];
 
