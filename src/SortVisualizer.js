@@ -5,6 +5,9 @@ import getInsertionSortAnimations from "./SortAlgorithms/Javascript/InsertionSor
 import getQuickSortAnimations from "./SortAlgorithms/Javascript/QuickSort.js";
 import getDualQuickSortAnimations from "./SortAlgorithms/Javascript/DualQuickSort.js";
 import getSelectionSortAnimations from "./SortAlgorithms/Javascript/SelectionSort.js";
+import getMaxHeapSortAnimations from  "./SortAlgorithms/Javascript/HeapSort.js";
+import getTimSortAnimations from "./SortAlgorithms/Javascript/TimSort.js";
+
 import githubLink from "./githubLink.png";
 
 import "./SortVisualizer.css";
@@ -229,6 +232,8 @@ class SortVisualizer extends React.Component{
     if(algo === "quick") return getQuickSortAnimations(rand_arr);
     if(algo === "dualquick") return getDualQuickSortAnimations(rand_arr);
     if(algo === "selection") return getSelectionSortAnimations(rand_arr);
+    if(algo === "heap") return getMaxHeapSortAnimations(rand_arr);
+    if(algo === "tim") return getTimSortAnimations(rand_arr);
   }
 
 
@@ -334,7 +339,7 @@ class SortVisualizer extends React.Component{
               </optgroup>
               <optgroup label = "Selection Family">
                 <option value = "selection"> Selection Sort </option>
-                <option disabled = {true}> Max-Heap Sort </option>
+                <option value = "heap"> Max-Heap Sort </option>
               </optgroup>
               <optgroup label = "Exchange Family">
                 <option value = "quick"> Quick Sort </option>
@@ -348,7 +353,7 @@ class SortVisualizer extends React.Component{
               </optgroup>
               <optgroup label = "Hybrids">
                 <option disabled = {true}> Binary Merge Sort </option>
-                <option disabled = {true}> TimSort </option>
+                <option value = "tim"> TimSort </option>
                 <option disabled = {true}> IntroSort </option>
               </optgroup>
               </select>
@@ -356,7 +361,7 @@ class SortVisualizer extends React.Component{
           <p> Language
             <select disabled = {this.state.running === true}>
             <option> Javascript</option>
-            <option> C++ </option>
+            <option disabled = {true}> C++ </option>
             </select>
           </p>
           <button
