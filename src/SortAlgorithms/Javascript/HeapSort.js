@@ -4,52 +4,44 @@
 export default function getMaxHeapSortAnimations(rand_arr){
   const arr = rand_arr.slice();
   const animations = [];
-  maxHeapSort(arr, animations);
+  heapSort(arr, arr.length, animations);
+
   return animations;
 }
 
-/** **/
-function maxHeapSort(arr, animations){
-  buildMaxHeap(arr, animations);
-  for(let i = arr.length-1; i>=0; i--){
+function heapSort(arr, n, animations){
+  for(let i = n/2 -1; i >= 0; i--){
+    heapify(arr,n,i, animations);
+  }
+
+  for(let i = n - 1; i > 0; i--){
     swap(arr, 0, i, animations);
-    maxHeapify(arr, 0, animations, i);
+    heapify(arr, i , 0, animations);
   }
+  return arr;
 }
 
-/** **/
-function buildMaxHeap(arr, animations){
-  for(let i = arr.length/2-1; i >= 0; i--){
-    maxHeapify(arr, i, animations, arr.length);
+function heapify(arr, n, i, animations){
+  var largest = i;
+  const l = 2*i + 1;
+  const r = 2*i+2;
+  if(l < n && arr[l] > arr[largest]) {
+    largest = l;
+    animations.push({select:[l]});
   }
-}
+  if(r < n && arr[r] > arr[largest]) {
+    largest = r;
+    animations.push({select: [r]});
+  }
 
-function maxHeapify(arr, i, animations, heapSize){
-  var l = left(i);
-  var r = right(i);
-  var largest;
-  if(l <= heapSize&& arr[l] > arr[i]) largest = l;
-  else{largest = i}
-
-  if(r <= heapSize && arr[r] > arr[largest]) largest =r;
-
-  if(largest!== i) swap(arr, i, largest, animations);
-}
-
-function left(i){
-  return 2*i + 1;
-}
-
-function right(i){
-  return 2*i+2;
-}
-
-function parent(i){
-  return (i-1)/2;
+  if(largest !== i){
+    swap(arr, i , largest, animations);
+    heapify(arr, n, largest, animations);
+  }
 }
 
 function swap(arr, i, j, animations){
-  animations.push({swap: [i,j], select:[i,j]});
+  animations.push({swap:[i,j], select: [i,j]});
   const temp = arr[i];
   const temp2 = arr[j];
   arr[i] = temp2;
