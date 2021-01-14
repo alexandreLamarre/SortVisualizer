@@ -7,6 +7,9 @@ import getDualQuickSortAnimations from "./SortAlgorithms/Javascript/DualQuickSor
 import getSelectionSortAnimations from "./SortAlgorithms/Javascript/SelectionSort.js";
 import getMaxHeapSortAnimations from  "./SortAlgorithms/Javascript/HeapSort.js";
 import getTimSortAnimations from "./SortAlgorithms/Javascript/TimSort.js";
+import getCountingSortAnimations from "./SortAlgorithms/Javascript/CountingSort.js";
+import getRadixSortLSDAnimations from "./SortAlgorithms/Javascript/RadixSortLSD.js";
+import getRadixSortMSDAnimations from "./SortAlgorithms/Javascript/RadixSortMSD";
 
 import githubLink from "./githubLink.png";
 
@@ -56,9 +59,9 @@ class SortVisualizer extends React.Component{
 
     const rand_arr = [];
     for(let i = 0; i < this.state.num_el; i++){
-      rand_arr.push(Math.random());
+      rand_arr.push(parseInt(Math.random() * this.state.num_el));
     }
-    let sorted_arr = rand_arr.slice().sort();
+    let sorted_arr = rand_arr.slice().sort(ascendingSort);
 
     this.draw(rand_arr, w, h, [], sorted_arr);
     this.setState({data:rand_arr, width: w, height: h, sorted_data: sorted_arr});
@@ -77,7 +80,7 @@ class SortVisualizer extends React.Component{
       }
       ctx.fillStyle = "rgb(255,255,255)";
       ctx.arc( ((i+1)/(this.state.num_el))*(w),
-                (h*0.95)-(rand_arr[i]*(h*0.95)+1),
+                (h*0.95)-((rand_arr[i]/(this.state.num_el))*(h*0.95)+1),
                 1,
                 0,
                 Math.PI*2);
@@ -86,7 +89,7 @@ class SortVisualizer extends React.Component{
       // draw select box
       if(highlight === true){
         const x = ((i+1)/(this.state.num_el))*(w) -6;
-        const y = (h*0.95)-(rand_arr[i]*h*0.95+1) -6;
+        const y = (h*0.95)-((rand_arr[i]/(this.state.num_el))*h*0.95+1) -6;
         ctx.beginPath();
         ctx.strokeStyle = "rgb(255, 0, 0)";
         ctx.rect(x,y,12,12);
@@ -112,7 +115,7 @@ class SortVisualizer extends React.Component{
       }
       ctx.fillStyle = "rgb(255,255,255)";
       const theta = (i/rand_arr.length)*Math.PI*2;
-      const r = rand_arr[i]*max_r;
+      const r = (rand_arr[i]/this.state.num_el)*max_r;
       const xPos = center.x + r*Math.cos(theta);
       const yPos = center.y + r*Math.sin(theta)
       ctx.arc(xPos,
@@ -137,6 +140,7 @@ class SortVisualizer extends React.Component{
 
   drawDisparity(rand_arr, w, h, selected, sorted_data){
     const ctx = this.canvas.current.getContext("2d");
+    const lookUpTable = {};
     var highlight = false;
     ctx.clearRect(0, 0, w, h);
     const max_r = Math.min(w/2, h*0.95/2);
@@ -144,13 +148,16 @@ class SortVisualizer extends React.Component{
     const center = {x:w/2,y:h*0.95/2};
     const num_el = rand_arr.length;
     for(let i = 0; i < rand_arr.length; i++){
-      const new_color = assignColorGradient(rand_arr[i]);
+      const new_color = assignColorGradient(rand_arr[i], this.state.num_el);
       //closeness measures the distance from the center:
       // a distance of 1 means the element is in the correct place in the
       //sorted array
       // a distance of 0 means it is the furthest possible from the correct place
       //in the sorted array
-      const sorted_index = sorted_data.indexOf(rand_arr[i]);
+      const startIndex = lookUpTable[rand_arr[i]] === undefined? 0:
+                                                      lookUpTable[rand_arr[i]]+1;
+      const sorted_index = sorted_data.indexOf(rand_arr[i], startIndex);
+      lookUpTable[rand_arr[i]] = sorted_index;
       const closeness = c - Math.abs(i-sorted_index);
       ctx.beginPath();
       if(selected !== undefined && selected !== null){
@@ -160,7 +167,7 @@ class SortVisualizer extends React.Component{
       }
       ctx.fillStyle = new_color;
       const theta = (i/rand_arr.length)*Math.PI*2;
-      const r = ((max_r)*closeness/c);
+      const r = (closeness/c)*max_r;
       const xPos = center.x + r*Math.cos(theta);
       const yPos = center.y + r*Math.sin(theta);
       ctx.arc(xPos,
@@ -193,7 +200,7 @@ class SortVisualizer extends React.Component{
 
     const rand_arr = [];
     for(let i = 0; i < this.state.num_el; i++){
-      rand_arr.push(Math.random()*0.95);
+      rand_arr.push(parseInt(Math.random()*this.state.num_el));
     }
     const selected = []; //no elements initially selected
 
@@ -234,6 +241,9 @@ class SortVisualizer extends React.Component{
     if(algo === "selection") return getSelectionSortAnimations(rand_arr);
     if(algo === "heap") return getMaxHeapSortAnimations(rand_arr);
     if(algo === "tim") return getTimSortAnimations(rand_arr);
+    if(algo === "counting") return getCountingSortAnimations(rand_arr);
+    if(algo === "radixLSD") return getRadixSortLSDAnimations(rand_arr);
+    if(algo === "radixMSD") return getRadixSortMSDAnimations(rand_arr);
   }
 
 
@@ -241,9 +251,9 @@ class SortVisualizer extends React.Component{
     const rand_arr = this.state.data;
     const h = this.state.height;
     const w = this.state.width;
-    var start = Date.now();
+    var start = performance.now();
     const animations = this.getAnimations(rand_arr.slice());
-    var end = Date.now();
+    var end = performance.now();
     var time = parseFloat(end - start);
     console.log("animation length", animations.length, "time", time);
     const that = this;
@@ -347,9 +357,10 @@ class SortVisualizer extends React.Component{
                 <option value = "dualquick"> Dual Pivot Quick Sort</option>
               </optgroup>
               <optgroup label = "Non-Comparison Family">
-                <option disabled = {true}> Radix LSD Sort, Base 4</option>
-                <option disabled = {true}> Radix MSD Sort, Base 8</option>
-                <option disabled = {true}> In Place Radix LSD Sort, Base 16</option>
+                <option value = "counting"> Counting Sort </option>
+                <option value = "radixLSD"> Radix LSD Sort, Base 4</option>
+                <option value = "radixMSD"> Radix MSD Sort, Base 8</option>
+                <option disabled = {true} hidden = {true}> In Place Radix LSD Sort, Base 16</option>
               </optgroup>
               <optgroup label = "Hybrids">
                 <option disabled = {true}> Binary Merge Sort </option>
@@ -465,9 +476,11 @@ function partitioned(arr, l, r){
 /**
 Assigns a input value in the continuous range 0 to 1, to
 a continuous color gradient
-@param value the data value to be converted to color
+@param v the data value to be converted to color
+@param c the normalizing constant for value so it is in the range 0, 1
 **/
-function assignColorGradient(value){
+function assignColorGradient(v, c){
+  const value = v/c
   if(value <0.33){
     const r = 255 - (value)*3*255;
     const g = value*3*255;
@@ -486,4 +499,8 @@ function assignColorGradient(value){
     const b = 255 - (value - 0.67)*3*255;
     return "rgb(" + r.toString() + "," + g.toString() + "," + b.toString() + ")";
   }
+}
+
+function ascendingSort(a,b){
+  return a-b;
 }
