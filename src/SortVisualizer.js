@@ -9,7 +9,8 @@ import getMaxHeapSortAnimations from  "./SortAlgorithms/Javascript/HeapSort.js";
 import getTimSortAnimations from "./SortAlgorithms/Javascript/TimSort.js";
 import getCountingSortAnimations from "./SortAlgorithms/Javascript/CountingSort.js";
 import getRadixSortLSDAnimations from "./SortAlgorithms/Javascript/RadixSortLSD.js";
-import getRadixSortMSDAnimations from "./SortAlgorithms/Javascript/RadixSortMSD";
+import getRadixSortMSDAnimations from "./SortAlgorithms/Javascript/RadixSortMSD.js";
+import getTernaryHeapSortAnimations from "./SortAlgorithms/Javascript/TernaryHeapSort.js";
 
 import githubLink from "./githubLink.png";
 
@@ -244,6 +245,7 @@ class SortVisualizer extends React.Component{
     if(algo === "counting") return getCountingSortAnimations(rand_arr);
     if(algo === "radixLSD") return getRadixSortLSDAnimations(rand_arr);
     if(algo === "radixMSD") return getRadixSortMSDAnimations(rand_arr);
+    if(algo === "ternaryHeap") return getTernaryHeapSortAnimations(rand_arr);
   }
 
 
@@ -348,9 +350,8 @@ class SortVisualizer extends React.Component{
               </optgroup>
               <optgroup label = "Selection Family">
                 <option value = "selection"> Selection Sort </option>
-                <option disabled = {true}> Double Selection Sort </option>
                 <option value = "heap"> Max-Heap Sort </option>
-                <option disabled = {true}> Ternary Heap Sort </option>
+                <option value = "ternaryHeap"> Ternary Heap Sort </option>
               </optgroup>
               <optgroup label = "Exchange Family">
                 <option value = "quick"> Quick Sort </option>
