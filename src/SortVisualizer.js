@@ -204,7 +204,7 @@ class SortVisualizer extends React.Component{
     }
     const selected = []; //no elements initially selected
 
-    let sorted_arr = rand_arr.slice().sort();
+    let sorted_arr = rand_arr.slice().sort(ascendingSort);
     this.draw(rand_arr, w, h, selected, sorted_arr);
     this.setState({data:rand_arr, sorted_data: sorted_arr});
 
@@ -345,15 +345,15 @@ class SortVisualizer extends React.Component{
               </optgroup>
               <optgroup label = "Merge Family">
                 <option value = "merge"> Merge Sort </option>
-                <option disabled = {true}> In-Place Merge Sort</option>
               </optgroup>
               <optgroup label = "Selection Family">
                 <option value = "selection"> Selection Sort </option>
+                <option disabled = {true}> Double Selection Sort </option>
                 <option value = "heap"> Max-Heap Sort </option>
+                <option disabled = {true}> Ternary Heap Sort </option>
               </optgroup>
               <optgroup label = "Exchange Family">
                 <option value = "quick"> Quick Sort </option>
-                <option disabled = {true}> Stable Quick Sort </option>
                 <option value = "dualquick"> Dual Pivot Quick Sort</option>
               </optgroup>
               <optgroup label = "Non-Comparison Family">
