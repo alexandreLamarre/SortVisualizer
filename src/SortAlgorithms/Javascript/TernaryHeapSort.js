@@ -10,8 +10,8 @@ export default function getTernaryHeapSortAnimations(rand_arr){
 }
 
 function ternaryHeapSort(arr, n, animations){
-  for(let i = n-1 /3; i >= 0; i--){
-    ternaryHeapify(arr,n-1,i, animations);
+  for(let i = n/3; i >= 0; i--){
+    ternaryHeapify(arr,n,i, animations);
   }
 
   for(let i = n - 1; i > 0; i--){

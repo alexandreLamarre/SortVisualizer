@@ -11,6 +11,7 @@ import getCountingSortAnimations from "./SortAlgorithms/Javascript/CountingSort.
 import getRadixSortLSDAnimations from "./SortAlgorithms/Javascript/RadixSortLSD.js";
 import getRadixSortMSDAnimations from "./SortAlgorithms/Javascript/RadixSortMSD.js";
 import getTernaryHeapSortAnimations from "./SortAlgorithms/Javascript/TernaryHeapSort.js";
+import getIntroSortAnimations from "./SortAlgorithms/Javascript/IntroSort.js";
 
 import githubLink from "./githubLink.png";
 
@@ -246,6 +247,7 @@ class SortVisualizer extends React.Component{
     if(algo === "radixLSD") return getRadixSortLSDAnimations(rand_arr);
     if(algo === "radixMSD") return getRadixSortMSDAnimations(rand_arr);
     if(algo === "ternaryHeap") return getTernaryHeapSortAnimations(rand_arr);
+    if(algo === "intro") return getIntroSortAnimations(rand_arr);
   }
 
 
@@ -366,7 +368,7 @@ class SortVisualizer extends React.Component{
               <optgroup label = "Hybrids">
                 <option disabled = {true}> Binary Merge Sort </option>
                 <option value = "tim"> TimSort </option>
-                <option disabled = {true}> IntroSort </option>
+                <option value = "intro"> IntroSort </option>
               </optgroup>
               </select>
           </p>
