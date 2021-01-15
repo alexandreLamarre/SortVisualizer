@@ -163,7 +163,7 @@ class SortVisualizer extends React.Component{
       // a distance of 0 means it is the furthest possible from the correct place
       //in the sorted array
       const startIndex = lookUpTable[rand_arr[i]] === undefined? 0:
-                                                      lookUpTable[rand_arr[i]]+1;
+                            Math.min(lookUpTable[rand_arr[i]]+1, rand_arr.length);
       const sorted_index = sorted_data.indexOf(rand_arr[i], startIndex);
       lookUpTable[rand_arr[i]] = sorted_index;
       const closeness = c - Math.abs(i-sorted_index);
