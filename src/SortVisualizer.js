@@ -27,7 +27,7 @@ class SortVisualizer extends React.Component{
     this.state = {
       width: 0, height: 0, maxtimeouts: 0,
       type: "scatter",
-      min_el: 10,
+      min_el: 128,
       max_el: 2048,
       num_el: 512,
       data: [], //integer array to be sorted, etc...
@@ -44,6 +44,7 @@ class SortVisualizer extends React.Component{
       curAnimationsIndex: 0,
       language: "Javascript",
       paused: true,
+      playerOpacity: 0.3,
 
     };
     this.canvas = React.createRef();
@@ -254,7 +255,7 @@ class SortVisualizer extends React.Component{
     if(algo === "Counting") return getCountingSortAnimations(rand_arr);
     if(algo === "RadixLSD Base 4") return getRadixSortLSDAnimations(rand_arr);
     if(algo === "RadixMSD Base 8") return getRadixSortMSDAnimations(rand_arr);
-    if(algo === "TernaryHeap") return getTernaryHeapSortAnimations(rand_arr);
+    if(algo === "Ternary Heap") return getTernaryHeapSortAnimations(rand_arr);
     if(algo === "Intro") return getIntroSortAnimations(rand_arr);
     if(algo === "Binary Insertion") return getBinaryInsertionSortAnimations(rand_arr);
   }
@@ -319,7 +320,7 @@ class SortVisualizer extends React.Component{
       clearInterval(id);
       id --;
     }
-    this.setState({running:false})
+    this.setState({running:false, animations: [], curAnimationsIndex: 0})
   }
 
   updateElements(e){
@@ -412,7 +413,10 @@ class SortVisualizer extends React.Component{
 
 
         <Draggable>
-          <div className = "animationControls" hidden = {this.state.running === false}>
+          <div className = "animationControls" hidden = {this.state.running === false}
+          onMouseOver = {() => this.setState({playerOpacity: 1.0})}
+          onMouseOut = {() => this.setState({playerOpacity: 0.3})}
+          style = {{opacity: this.state.playerOpacity}}>
             <div
               style = {{fontSize: 16}}>
               {this.state.algorithm + " Sort ( " + this.state.language + ")"}

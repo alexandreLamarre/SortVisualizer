@@ -10,7 +10,7 @@ export default function getMaxHeapSortAnimations(rand_arr){
 }
 
 function heapSort(arr, n, animations){
-  for(let i = n/2 -1; i >= 0; i--){
+  for(let i = Math.floor(n/2) -1; i >= 0; i--){
     heapify(arr,n,i, animations);
   }
 

@@ -1,24 +1,30 @@
-const RUN = 32;
+const RUN = 16;
 /** **/
 export default function getTimSortAnimations(rand_arr){
   const arr = rand_arr.slice();
   const animations = [];
-  timSort(arr, animations);
+  const rarr = timSort(arr, animations);
+  console.log("timsort", rarr);
   return animations;
 }
 
 function timSort(arr, animations){
-  for(let i = 0; i < arr.length; i+= RUN){
-    insertionSort(arr, i, Math.min(i+31, arr.length-1), animations);
+  const n = arr.length;
+  console.log(n);
+  for(let i = 0; i < n; i+= RUN){
+    insertionSort(arr, i, Math.min(i+RUN-1, n-1), animations);
   }
-  for(let i = RUN; i < arr.length; i *=2){
-    for(let l = 0; l < arr.length; l+= 2*i){
-      var m = l + i - 1;
-      var r = Math.min(l+2*i -1, arr.length-1);
 
+  for(let size = RUN; size < n/2; size *=2){
+    console.log("run, arr.length", size, arr.length);
+    for(let l = 0; l < n; l+= 2*size){
+      // var m = l + i - 1;
+      var r = Math.min(l+2*size -1, n-1);
+      var m = l + size -1;
       merge(arr, l, m, r, animations);
     }
   }
+  return arr;
 }
 
 function insertionSort(arr,l,r,animations){
@@ -26,11 +32,11 @@ function insertionSort(arr,l,r,animations){
     const key = arr[i];
     var j = i - 1;
     while(j >= l && arr[j] > key){
+      animations.push({set:[j+1, arr[j]], select: [j+1,j]})
       arr[j+1] = arr[j];
-      animations.push({set:[j+1, arr[j]], select: [j,j+1]})
       j --;
     }
-    animations.push({set:[j+1, arr[j]], select: [i,j+1]});
+    animations.push({set:[j+1, key], select: [i,j+1]});
     arr[j+1] = key;
   }
 }

@@ -5,13 +5,12 @@ export default function getTernaryHeapSortAnimations(rand_arr){
   const arr = rand_arr.slice();
   const animations = [];
   const rarr = ternaryHeapSort(arr, arr.length, animations);
-  console.log(rarr);
   return animations;
 }
 
 function ternaryHeapSort(arr, n, animations){
-  for(let i = n/3; i >= 0; i--){
-    ternaryHeapify(arr,n,i, animations);
+  for(let i = Math.floor(n/3)-1; i >= 0; i--){
+    ternaryHeapify(arr,n,i-1, animations);
   }
 
   for(let i = n - 1; i > 0; i--){
@@ -48,7 +47,6 @@ function ternaryHeapify(arr, n, i, animations){
 function swap(arr, i, j, animations){
   animations.push({swap:[i,j], select: [i,j]});
   const temp = arr[i];
-  const temp2 = arr[j];
-  arr[i] = temp2;
+  arr[i] = arr[j];
   arr[j] = temp;
 }
