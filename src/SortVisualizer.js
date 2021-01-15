@@ -12,7 +12,7 @@ import getRadixSortLSDAnimations from "./SortAlgorithms/Javascript/RadixSortLSD.
 import getRadixSortMSDAnimations from "./SortAlgorithms/Javascript/RadixSortMSD.js";
 import getTernaryHeapSortAnimations from "./SortAlgorithms/Javascript/TernaryHeapSort.js";
 import getIntroSortAnimations from "./SortAlgorithms/Javascript/IntroSort.js";
-
+import getBinaryInsertionSortAnimations from './SortAlgorithms/Javascript/BinaryInsertionSort.js';
 import githubLink from "./githubLink.png";
 
 import "./SortVisualizer.css";
@@ -248,6 +248,7 @@ class SortVisualizer extends React.Component{
     if(algo === "radixMSD") return getRadixSortMSDAnimations(rand_arr);
     if(algo === "ternaryHeap") return getTernaryHeapSortAnimations(rand_arr);
     if(algo === "intro") return getIntroSortAnimations(rand_arr);
+    if(algo === "binaryInsertion") return getBinaryInsertionSortAnimations(rand_arr);
   }
 
 
@@ -345,7 +346,7 @@ class SortVisualizer extends React.Component{
               onChange = {(e) => this.setAlgorithm(e)}>
               <optgroup label = "Insertion Family">
                 <option value = "insertion"> Insertion Sort</option>
-                <option disabled = {true}> Binary Insertion Sort</option>
+                <option value = "binaryInsertion"> Binary Insertion Sort</option>
               </optgroup>
               <optgroup label = "Merge Family">
                 <option value = "merge"> Merge Sort </option>
@@ -366,7 +367,7 @@ class SortVisualizer extends React.Component{
                 <option disabled = {true} hidden = {true}> In Place Radix LSD Sort, Base 16</option>
               </optgroup>
               <optgroup label = "Hybrids">
-                <option disabled = {true}> Binary Merge Sort </option>
+                <option disabled = {true} hidden = {true}> Binary Merge Sort </option>
                 <option value = "tim"> TimSort </option>
                 <option value = "intro"> IntroSort </option>
               </optgroup>

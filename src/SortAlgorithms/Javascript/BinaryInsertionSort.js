@@ -12,11 +12,20 @@ export default function getBinaryInsertionSortAnimations(rand_arr){
 @param arr array to sort
 @param animations array to push animations to
 **/
-function binaryIsertionSortAnimate(arr, animations){
+function binaryInsertionSortAnimate(arr, animations){
   for(let i = 0; i < arr.length; i++){
     const key = arr[i];
-    let j = binarySearch(arr, key, 0, arr.length -1, animations);
-    arr = ((arr.slice(0,j).concat(key)).concat(arr.slice(j,i))).concat(arr.slice(i+1));
+    let j = i - 1;
+    let pivot = binarySearch(arr, key, 0, arr.length -1, animations);
+
+    while(j >= pivot){
+      animations.push({select: [j+1, j], set: [j+1, arr[j]]});
+      arr[j+1] = arr[j];
+      j--;
+    }
+    animations.push({select: [j+1], set: [j+1, key]});
+    arr[j+1] = key;
+
   }
   return animations
 }
@@ -25,6 +34,7 @@ function binaryIsertionSortAnimate(arr, animations){
 
 **/
 function binarySearch(arr, val, start, end, animations){
+  animations.push({select: [start,end]});
   if(start === end){
     if(arr[start] > val){
       return start;
@@ -37,12 +47,12 @@ function binarySearch(arr, val, start, end, animations){
     return start;
   }
 
-  mid = Math.floor((start+end)/2);
+  const mid = Math.floor((start+end)/2);
   if(arr[mid] < val){
-    return binarySearch(arr, val ,mid+1, end);
+    return binarySearch(arr, val ,mid+1, end, animations);
   }
   else if (arr[mid] > val){
-    return binarySearch(arr, val, start, mid - 1);
+    return binarySearch(arr, val, start, mid - 1, animations);
   }
   else{
     return mid;
