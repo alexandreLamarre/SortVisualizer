@@ -33,12 +33,18 @@ class SortVisualizer extends React.Component{
       data: [], //integer array to be sorted, etc...
       sorted_data: [],
       running: false,
-      algorithm: "insertion",
+      algorithm: "Insertion",
       realTime: 0,
       comparisons: 0,
       swaps: 0,
       mainWrites: 0,
       auxWrites: 0,
+      actionsPerTick: 15,
+      animations: [],
+      curAnimationsIndex: 0,
+      language: "Javascript",
+      paused: true,
+
     };
     this.canvas = React.createRef();
   }
@@ -231,24 +237,26 @@ class SortVisualizer extends React.Component{
   }
 
   setAlgorithm(e){
+    console.log(e.target.value);
     this.setState({algorithm: e.target.value});
   }
 
   getAnimations(rand_arr){
     const algo = this.state.algorithm;
-    if(algo === "insertion") return getInsertionSortAnimations(rand_arr);
-    if(algo === "merge") return getMergeSortAnimations(rand_arr);
-    if(algo === "quick") return getQuickSortAnimations(rand_arr);
-    if(algo === "dualquick") return getDualQuickSortAnimations(rand_arr);
-    if(algo === "selection") return getSelectionSortAnimations(rand_arr);
-    if(algo === "heap") return getMaxHeapSortAnimations(rand_arr);
-    if(algo === "tim") return getTimSortAnimations(rand_arr);
-    if(algo === "counting") return getCountingSortAnimations(rand_arr);
-    if(algo === "radixLSD") return getRadixSortLSDAnimations(rand_arr);
-    if(algo === "radixMSD") return getRadixSortMSDAnimations(rand_arr);
-    if(algo === "ternaryHeap") return getTernaryHeapSortAnimations(rand_arr);
-    if(algo === "intro") return getIntroSortAnimations(rand_arr);
-    if(algo === "binaryInsertion") return getBinaryInsertionSortAnimations(rand_arr);
+    console.log(algo)
+    if(algo === "Insertion") return getInsertionSortAnimations(rand_arr);
+    if(algo === "Merge") return getMergeSortAnimations(rand_arr);
+    if(algo === "Quick") return getQuickSortAnimations(rand_arr);
+    if(algo === "Dual Pivot Quick") return getDualQuickSortAnimations(rand_arr);
+    if(algo === "Selection") return getSelectionSortAnimations(rand_arr);
+    if(algo === "Heap") return getMaxHeapSortAnimations(rand_arr);
+    if(algo === "Tim") return getTimSortAnimations(rand_arr);
+    if(algo === "Counting") return getCountingSortAnimations(rand_arr);
+    if(algo === "RadixLSD Base 4") return getRadixSortLSDAnimations(rand_arr);
+    if(algo === "RadixMSD Base 8") return getRadixSortMSDAnimations(rand_arr);
+    if(algo === "TernaryHeap") return getTernaryHeapSortAnimations(rand_arr);
+    if(algo === "Intro") return getIntroSortAnimations(rand_arr);
+    if(algo === "Binary Insertion") return getBinaryInsertionSortAnimations(rand_arr);
   }
 
 
@@ -266,30 +274,38 @@ class SortVisualizer extends React.Component{
   }
 
   animate(rand_arr, w, h, animations, cur_index){
-    if(this.state.running !== false && animations[cur_index] !== undefined){
-      var selected = null;
-      if(animations[cur_index].swap !== null && animations[cur_index].swap !== undefined){
-        const [i,j] = animations[cur_index].swap;
-        const temp = rand_arr[i];
-        const temp2 = rand_arr[j];
-        rand_arr[i] = temp2;
-        rand_arr[j] = temp;
+    const num_actions = this.state.actionsPerTick;
+    if(this.state.running !== false && animations[cur_index] !== undefined
+      && this.state.paused === false){
+      for(let k = 0; k < num_actions; k++){
+        var selected = null;
+        if(animations[cur_index].swap !== null && animations[cur_index].swap !== undefined){
+          const [i,j] = animations[cur_index].swap;
+          const temp = rand_arr[i];
+          const temp2 = rand_arr[j];
+          rand_arr[i] = temp2;
+          rand_arr[j] = temp;
 
+        }
+        if(animations[cur_index].set !== null && animations[cur_index].set !== undefined){
+          rand_arr[animations[cur_index].set[0]] = animations[cur_index].set[1];
+        }
+        if(animations[cur_index].select !== null &&
+                    animations[cur_index].select !== undefined){
+                      selected = animations[cur_index].select;
+        }
+        cur_index ++;
+        if(cur_index > animations.length-1) break;
       }
-      if(animations[cur_index].set !== null && animations[cur_index].set !== undefined){
-        rand_arr[animations[cur_index].set[0]] = animations[cur_index].set[1];
-      }
-      if(animations[cur_index].select !== null &&
-                  animations[cur_index].select !== undefined){
-                    selected = animations[cur_index].select;
-                  }
       this.draw(rand_arr, w, h, selected, this.state.sorted_data);
       // continue animation when possible
       if(cur_index < animations.length) requestAnimationFrame( () => {
-                                            this.animate(rand_arr, w, h, animations, cur_index+1)})
+                                            this.animate(rand_arr, w, h, animations, cur_index)})
       }
       else{
-        this.setState({running:false});
+        if(this.state.paused === true){
+          this.setState({curAnimationsIndex: cur_index});
+        }
       }
   }
 
@@ -311,6 +327,11 @@ class SortVisualizer extends React.Component{
     const new_num_el = parseInt(e.target.value);
     const that = this;
     waitUpdateElements(new_num_el, that)
+  }
+
+  PlayPause(){
+    const that = this;
+    awaitPlayPause(that);
   }
 
   render(){
@@ -345,31 +366,31 @@ class SortVisualizer extends React.Component{
               <select disabled = {this.state.running === true}
               onChange = {(e) => this.setAlgorithm(e)}>
               <optgroup label = "Insertion Family">
-                <option value = "insertion"> Insertion Sort</option>
-                <option value = "binaryInsertion"> Binary Insertion Sort</option>
+                <option value = "Insertion"> Insertion Sort</option>
+                <option value = "Binary Insertion"> Binary Insertion Sort</option>
               </optgroup>
               <optgroup label = "Merge Family">
-                <option value = "merge"> Merge Sort </option>
+                <option value = "Merge"> Merge Sort </option>
               </optgroup>
               <optgroup label = "Selection Family">
-                <option value = "selection"> Selection Sort </option>
-                <option value = "heap"> Max-Heap Sort </option>
-                <option value = "ternaryHeap"> Ternary Heap Sort </option>
+                <option value = "Selection"> Selection Sort </option>
+                <option value = "Heap"> Max-Heap Sort </option>
+                <option value = "Ternary Heap"> Ternary Heap Sort </option>
               </optgroup>
               <optgroup label = "Exchange Family">
-                <option value = "quick"> Quick Sort </option>
-                <option value = "dualquick"> Dual Pivot Quick Sort</option>
+                <option value = "Quick"> Quick Sort </option>
+                <option value = "Dual Pivot Quick"> Dual Pivot Quick Sort</option>
               </optgroup>
               <optgroup label = "Non-Comparison Family">
-                <option value = "counting"> Counting Sort </option>
-                <option value = "radixLSD"> Radix LSD Sort, Base 4</option>
-                <option value = "radixMSD"> Radix MSD Sort, Base 8</option>
+                <option value = "Counting"> Counting Sort </option>
+                <option value = "RadixLSD Base 4"> Radix LSD Sort, Base 4</option>
+                <option value = "RadixMSD Base 8"> Radix MSD Sort, Base 8</option>
                 <option disabled = {true} hidden = {true}> In Place Radix LSD Sort, Base 16</option>
               </optgroup>
               <optgroup label = "Hybrids">
                 <option disabled = {true} hidden = {true}> Binary Merge Sort </option>
-                <option value = "tim"> TimSort </option>
-                <option value = "intro"> IntroSort </option>
+                <option value = "Tim"> TimSort </option>
+                <option value = "Intro"> IntroSort </option>
               </optgroup>
               </select>
           </p>
@@ -386,17 +407,36 @@ class SortVisualizer extends React.Component{
           </button>
           </div>
         </Draggable>
+
+
+
+
         <Draggable>
           <div className = "animationControls" hidden = {this.state.running === false}>
+            <div
+              style = {{fontSize: 16}}>
+              {this.state.algorithm + " Sort ( " + this.state.language + ")"}
+            </div>
             <button> -inf </button>
             <button> -1 </button>
-            <button> Start/Pause </button>
+            <button
+              onClick = {() => this.PlayPause()}>
+              Start/Pause
+            </button>
             <button
             onClick = {() => this.clearAnimations()}>
               Stop
             </button>
             <button> +1 </button>
             <button> +inf </button>
+            <p> Actions Per Animation Tick
+                <input type = "number"
+                value = {this.state.actionsPerTick}
+                min = "1" max = "120"
+                onChange = {(e) => {this.setState(
+                  {actionsPerTick: parseInt(e.target.value)})}}>
+               </input>
+            </p>
             <p> Visualization type:
               <select onChange= {(e) => this.changePlotType(e)}
                       value = {this.state.type}>
@@ -412,6 +452,10 @@ class SortVisualizer extends React.Component{
             <div> <b>{this.state.auxWrites}</b> Writes to Auxiliary Array </div>
           </div>
         </Draggable>
+
+
+
+
         <canvas ref = {this.canvas} className = "sortCanvas"></canvas>
         <a className = "githubLink"
         href = "https://github.com/alexandreLamarre/SortVisualizer"
@@ -439,7 +483,8 @@ async function waitStartAnimate(that, rand_arr, w, h, animations, time){
   await that.setState({running:true,
     mainWrites: 0, auxWrites: 0,
     comparions: 0, realTime:time,
-    swaps: 0});
+    swaps: 0, animations: animations, paused:false,
+    curAnimationsIndex: 0,});
   that.animate(rand_arr, w, h, animations, 0);
 }
 
@@ -449,6 +494,18 @@ function quickSorted(arr, l, r){
 
     quickSorted(arr, l, pivot -1);
     quickSorted(arr, pivot+1, r);
+  }
+}
+
+async function awaitPlayPause(that){
+  await that.setState({paused: !that.state.paused});
+  if(that.state.paused === false) {
+    const rand_arr = that.state.data;
+    const w = that.state.width;
+    const h = that.state.height;
+    const animations = that.state.animations;
+    const animationIndex = that.state.curAnimationsIndex;
+    that.animate(rand_arr, w, h, animations, animationIndex);
   }
 }
 
