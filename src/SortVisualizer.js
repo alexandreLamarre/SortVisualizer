@@ -154,7 +154,7 @@ class SortVisualizer extends React.Component{
     ctx.clearRect(0, 0, w, h);
     const max_r = Math.min(w/2, h*0.95/2);
     const c = rand_arr.length;
-    const center = {x:w/2,y:h*0.95/2};
+    const center = {x:w/2,y:h*0.95/2-1};
     const num_el = rand_arr.length;
     for(let i = 0; i < rand_arr.length; i++){
       const new_color = assignColorGradient(rand_arr[i], this.state.num_el);
@@ -428,8 +428,10 @@ class SortVisualizer extends React.Component{
               Start/Pause
             </button>
             <button
-            onClick = {() => this.clearAnimations()}>
-              Stop
+            onClick = {() => this.clearAnimations()}
+            style = {{position:"absolute", right: 0, top: 0,
+                      backgroundColor: "red", outline: "none"}}>
+              X
             </button>
             <button> +1 </button>
             <button> +inf </button>
@@ -438,7 +440,8 @@ class SortVisualizer extends React.Component{
                 value = {this.state.actionsPerTick}
                 min = "1" max = "120"
                 onChange = {(e) => {this.setState(
-                  {actionsPerTick: parseInt(e.target.value)})}}>
+                  {actionsPerTick: e.target.value.length > 0?
+                          Math.min(parseInt(e.target.value),120): parseInt(1)})}}>
                </input>
             </p>
             <p> Visualization type:

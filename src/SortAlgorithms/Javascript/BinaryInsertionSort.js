@@ -13,10 +13,10 @@ export default function getBinaryInsertionSortAnimations(rand_arr){
 @param animations array to push animations to
 **/
 function binaryInsertionSortAnimate(arr, animations){
-  for(let i = 0; i < arr.length; i++){
+  for(let i = 1; i < arr.length; i++){
     const key = arr[i];
     let j = i - 1;
-    let pivot = binarySearch(arr, key, 0, arr.length -1, animations);
+    let pivot = binarySearch(arr, 0, j, key, animations);
 
     while(j >= pivot){
       animations.push({select: [j+1, j], set: [j+1, arr[j]]});
@@ -33,7 +33,7 @@ function binaryInsertionSortAnimate(arr, animations){
 /**
 
 **/
-function binarySearch(arr, val, start, end, animations){
+function binarySearch(arr, start, end, val, animations){
   animations.push({select: [start,end]});
   if(start === end){
     if(arr[start] > val){
@@ -43,16 +43,15 @@ function binarySearch(arr, val, start, end, animations){
       return start+1;
     }
   }
-  if(start > end){
-    return start;
-  }
+
+  if(start > end) return start;
 
   const mid = Math.floor((start+end)/2);
   if(arr[mid] < val){
-    return binarySearch(arr, val ,mid+1, end, animations);
+    return binarySearch(arr,mid+1, end, val, animations);
   }
   else if (arr[mid] > val){
-    return binarySearch(arr, val, start, mid - 1, animations);
+    return binarySearch(arr, start, mid - 1, val, animations);
   }
   else{
     return mid;
