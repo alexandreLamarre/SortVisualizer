@@ -15,8 +15,9 @@ export default function getSelectionSortAnimations(rand_arr){
 function selectionSortAnimate(arr, animations){
   for(let i = 0; i < arr.length-1; i ++){
     var min = i;
-
+  
     for(let j = i+ 1; j< arr.length; j++){
+      animations.push({select: [i,j]});
       if(arr[j] < arr[min]){
         min = j;
       }
