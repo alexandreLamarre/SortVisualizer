@@ -296,7 +296,10 @@ class SortVisualizer extends React.Component{
                       selected = animations[cur_index].select;
         }
         cur_index ++;
-        if(cur_index > animations.length-1) break;
+        if(cur_index > animations.length-1) {
+          this.setState({curAnimationsIndex: animations.length-1});
+          break
+        };
       }
       this.draw(rand_arr, w, h, selected, this.state.sorted_data);
       // continue animation when possible
@@ -421,8 +424,7 @@ class SortVisualizer extends React.Component{
               style = {{fontSize: 16}}>
               {this.state.algorithm + " Sort ( " + this.state.language + ")"}
             </div>
-            <button> -inf </button>
-            <button> -1 </button>
+            <hr/>
             <button
               onClick = {() => this.PlayPause()}>
               Start/Pause
@@ -433,8 +435,6 @@ class SortVisualizer extends React.Component{
                       backgroundColor: "red", outline: "none"}}>
               X
             </button>
-            <button> +1 </button>
-            <button> +inf </button>
             <p> Actions Per Animation Tick
                 <input type = "number"
                 value = {this.state.actionsPerTick}
