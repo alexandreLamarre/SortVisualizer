@@ -15,12 +15,13 @@ function timSort(arr, animations){
     insertionSort(arr, i, Math.min(i+RUN-1, n-1), animations);
   }
 
-  for(let size = RUN; size < n/2; size *=2){
+  for(let size = RUN; size < n; size *=2){
     console.log("run, arr.length", size, arr.length);
     for(let l = 0; l < n; l+= 2*size){
       // var m = l + i - 1;
       var r = Math.min(l+2*size -1, n-1);
-      var m = l + size -1;
+      var m = Math.min(l + size -1, n-1);
+      if(m > r) console.log("uh oh ")
       merge(arr, l, m, r, animations);
     }
   }
