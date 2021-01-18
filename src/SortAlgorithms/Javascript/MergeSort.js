@@ -41,24 +41,22 @@ function mergeSort(arr, l, pivot, r, auxiliary, animations){
     animations.push({set: null, select: [i,j]});
 
     if(auxiliary[i] <= auxiliary[j]){
-      animations.push({set: [k,auxiliary[i]]});
+      animations.push({set: [k,auxiliary[i]], select: [i,k]});
       arr[k++] = auxiliary[i++];
     }
     else{
-      animations.push({set: [k,auxiliary[j]]});
+      animations.push({set: [k,auxiliary[j]], select: [i, k]});
       arr[k++] = auxiliary[j++];
     }
   }
 
   while(i <= pivot){
-    animations.push({select: [i,i]});
-    animations.push({set: [k, auxiliary[i]]});
+    animations.push({set: [k, auxiliary[i]], select: [i, k]});
     arr[k++] = auxiliary[i++];
   }
 
   while(j<= r){
-    animations.push({select: [j,j]});
-    animations.push({set: [k, auxiliary[j]]});
+    animations.push({set: [k, auxiliary[j]], select: [j, k]});
     arr[k++] = auxiliary[j++];
   }
 }
