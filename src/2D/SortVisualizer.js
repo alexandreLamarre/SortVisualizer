@@ -1,18 +1,18 @@
 import React from "react";
 import Draggable from "react-draggable";
-import getMergeSortAnimations from "./SortAlgorithms/Javascript/MergeSort.js";
-import getInsertionSortAnimations from "./SortAlgorithms/Javascript/InsertionSort.js";
-import getQuickSortAnimations from "./SortAlgorithms/Javascript/QuickSort.js";
-import getDualQuickSortAnimations from "./SortAlgorithms/Javascript/DualQuickSort.js";
-import getSelectionSortAnimations from "./SortAlgorithms/Javascript/SelectionSort.js";
-import getMaxHeapSortAnimations from  "./SortAlgorithms/Javascript/HeapSort.js";
-import getTimSortAnimations from "./SortAlgorithms/Javascript/TimSort.js";
-import getCountingSortAnimations from "./SortAlgorithms/Javascript/CountingSort.js";
-import getRadixSortLSDAnimations from "./SortAlgorithms/Javascript/RadixSortLSD.js";
-import getRadixSortMSDAnimations from "./SortAlgorithms/Javascript/RadixSortMSD.js";
-import getTernaryHeapSortAnimations from "./SortAlgorithms/Javascript/TernaryHeapSort.js";
-import getIntroSortAnimations from "./SortAlgorithms/Javascript/IntroSort.js";
-import getBinaryInsertionSortAnimations from './SortAlgorithms/Javascript/BinaryInsertionSort.js';
+import getMergeSortAnimations from "../SortAlgorithms/Javascript/MergeSort.js";
+import getInsertionSortAnimations from "../SortAlgorithms/Javascript/InsertionSort.js";
+import getQuickSortAnimations from "../SortAlgorithms/Javascript/QuickSort.js";
+import getDualQuickSortAnimations from "../SortAlgorithms/Javascript/DualQuickSort.js";
+import getSelectionSortAnimations from "../SortAlgorithms/Javascript/SelectionSort.js";
+import getMaxHeapSortAnimations from  "../SortAlgorithms/Javascript/HeapSort.js";
+import getTimSortAnimations from "../SortAlgorithms/Javascript/TimSort.js";
+import getCountingSortAnimations from "../SortAlgorithms/Javascript/CountingSort.js";
+import getRadixSortLSDAnimations from "../SortAlgorithms/Javascript/RadixSortLSD.js";
+import getRadixSortMSDAnimations from "../SortAlgorithms/Javascript/RadixSortMSD.js";
+import getTernaryHeapSortAnimations from "../SortAlgorithms/Javascript/TernaryHeapSort.js";
+import getIntroSortAnimations from "../SortAlgorithms/Javascript/IntroSort.js";
+import getBinaryInsertionSortAnimations from '../SortAlgorithms/Javascript/BinaryInsertionSort.js';
 import githubLink from "./githubLink.png";
 
 import "./SortVisualizer.css";
@@ -39,7 +39,7 @@ class SortVisualizer extends React.Component{
       swaps: 0,
       mainWrites: 0,
       auxWrites: 0,
-      actionsPerTick: 15,
+      actionsPerTick: 5,
       animations: [],
       curAnimationsIndex: 0,
       language: "Javascript",

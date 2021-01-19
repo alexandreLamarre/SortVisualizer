@@ -1,6 +1,7 @@
 import logo from './logo.svg';
 import './App.css';
-import SortVisualizer from "./SortVisualizer.js";
+import SortVisualizer from "./2D/SortVisualizer.js";
+import SortVisualizer3D from "./3D/SortVisualizer3D.js";
 
 function App() {
   return (
@@ -8,6 +9,8 @@ function App() {
       <header className="App-header">
       <SortVisualizer/>
       {/*
+      <SortVisualizer/>
+
         <img src={logo} className="App-logo" alt="logo" />
         <p>
           Edit <code>src/App.js</code> and save to reload.
