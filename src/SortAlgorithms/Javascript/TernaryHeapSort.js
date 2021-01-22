@@ -4,7 +4,7 @@
 export default function getTernaryHeapSortAnimations(rand_arr){
   const arr = rand_arr.slice();
   const animations = [];
-  const rarr = ternaryHeapSort(arr, arr.length, animations);
+  ternaryHeapSort(arr, arr.length, animations);
   return animations;
 }
 

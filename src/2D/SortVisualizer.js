@@ -155,7 +155,6 @@ class SortVisualizer extends React.Component{
     const max_r = Math.min(w/2, h*0.95/2);
     const c = rand_arr.length;
     const center = {x:w/2,y:h*0.95/2-1};
-    const num_el = rand_arr.length;
     for(let i = 0; i < rand_arr.length; i++){
       const new_color = assignColorGradient(rand_arr[i], this.state.num_el);
       //closeness measures the distance from the center:
@@ -466,8 +465,8 @@ class SortVisualizer extends React.Component{
         <canvas ref = {this.canvas} className = "sortCanvas"></canvas>
         <a className = "githubLink"
         href = "https://github.com/alexandreLamarre/SortVisualizer"
-        target = "_blank">
-          <img src ={githubLink}
+        target = "_blank" rel ="noreferrer">
+          <img src ={githubLink} alt = ""
           className = "githubLinkImg">
           </img>
         </a>
@@ -495,14 +494,6 @@ async function waitStartAnimate(that, rand_arr, w, h, animations, time){
   that.animate(rand_arr, w, h, animations, 0);
 }
 
-function quickSorted(arr, l, r){
-  if(l < r){
-    var pivot = partitioned(arr, l, r);
-
-    quickSorted(arr, l, pivot -1);
-    quickSorted(arr, pivot+1, r);
-  }
-}
 
 async function awaitPlayPause(that){
   await that.setState({paused: !that.state.paused});
@@ -514,31 +505,6 @@ async function awaitPlayPause(that){
     const animationIndex = that.state.curAnimationsIndex;
     that.animate(rand_arr, w, h, animations, animationIndex);
   }
-}
-
-/**
-
-**/
-function partitioned(arr, l, r){
-  var pivot = arr[r];
-
-  let i = l - 1;
-  for(let j = l; j <= r-1; j++){
-    if(arr[j] < pivot){
-      i++;
-      //swap array[i] and array[j]
-      const temp = arr[j];
-      const temp2 = arr[i];
-      arr[j] = temp2;
-      arr[i] = temp;
-    }
-  }
-  //swap array[i+1] and arr[r]
-  const temp = arr[i+1];
-  const temp2 = arr[r];
-  arr[i+1] = temp2;
-  arr[r] = temp;
-  return (i + 1)
 }
 
 /**

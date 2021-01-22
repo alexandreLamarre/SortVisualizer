@@ -1,6 +1,13 @@
 import React from "react";
+import WebGL from "./WebGL";
 
-import "./SortVisualizer3D.css"
+import "./SortVisualizer3D.css";
+
+require("react-dom");
+window.React2 = require("react");
+console.log("One version of React?",window.React1 === window.React2);
+
+
 class SortVisualizer3D extends React.Component{
   constructor(props){
     super(props);
@@ -8,17 +15,15 @@ class SortVisualizer3D extends React.Component{
       width: 0, height: 0,
       num_el: 2048,
       data: [],
+      heuristic: "x+y",
     }
 
     this.canvas = React.createRef();
   }
 
   componentDidMount(){
-    const ctx = this.canvas.current.getContext("2d");
     const w = window.innerWidth;
     const h = window.innerHeight;
-    ctx.canvas.width = w;
-    ctx.canvas.height = h*0.95;
 
     const rand_arr = [];
     for(let i = 0; i < 200; i++){
@@ -26,29 +31,24 @@ class SortVisualizer3D extends React.Component{
         rand_arr.push([Math.random(), Math.random()]);
       }
     }
-
-    this.rDraw(rand_arr, w, h, [], []);
+    // draw(gl);
     this.setState({data: rand_arr, width:w, height: h})
   }
 
-  rDraw(rand_arr, w, h, selected, sorted_arr){
-    const ctx = this.canvas.current.getContext("2d");
-    console.time("animations");
-    ctx.clearRect(0,0,w,h);
-    for(let i = 0; i < rand_arr.length; i++){
-      ctx.beginPath();
-      ctx.fillStyle = "rgb(255,255,255)";
-      ctx.arc(rand_arr[i][0]*w, rand_arr[i][1]*h, 1, 0, Math.PI*2);
-      ctx.fill();
-      ctx.closePath();
-    }
-    console.timeEnd("animations");
+  /**
+  evaluate the heuristic on the data values
+  **/
+  hEval(x,y){
+    return x + y;
   }
+
 
   render(){
     return (
       <div>
-        <canvas ref = {this.canvas} className = "3Dcanvas"></canvas>
+        <WebGL/>
+        {/*<canvas ref = {this.canvas} className = "3Dcanvas"
+        style = {{height: this.state.height, width: this.state.width}}></canvas> */}
       </div>
     )
   }
