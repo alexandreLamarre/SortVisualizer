@@ -26,8 +26,8 @@ export default (id) => {
 
     const vertices = Cube.vertices;
     const indices = Cube.indices;
-    const normals = Cube.normals;
-    const textureCoords = Cube.textureCoords;
+    const normals = [];
+    const textureCoords = [];
 
     const modelRender = new ModelRenderer();
     const light = new Light(100, 100, -100, 1.0, 1.0, 1.0, 0.4);
@@ -42,12 +42,12 @@ export default (id) => {
 
     const camera = new Camera();
 
-    const instance = new ModelInstance(0, 0, 0, 0, 0, 0, 0.5);
+    const instance = new ModelInstance(0, 0, 0, 0, 0.5, 0.5, 0.5);
     modelRender.addInstance(instance, 'cube');
 
     const render = () => {
         GLC.clear(1.0, 1.0, 1.0, 1.0);
-        instance.updateRotation(1, 1, 1);
+        instance.updateRotation(0, 1, 0);
         modelRender.render(light, camera);
         window.requestAnimationFrame(render);
     }

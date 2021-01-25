@@ -18,21 +18,25 @@ class SortVisualizer3D extends React.Component{
       heuristic: "x+y",
     }
 
-    this.canvas = React.createRef();
+    this.gl = React.createRef();
   }
 
   componentDidMount(){
     const w = window.innerWidth;
-    const h = window.innerHeight;
+    const h = window.innerHeight*0.95;
+    this.setState({width: w, height: h});
 
     const rand_arr = [];
+    const indices = [];
     for(let i = 0; i < 200; i++){
       for(let j = 0; j < 200; j++){
         rand_arr.push([Math.random(), Math.random()]);
+        indices.push(i*200+j);
       }
     }
     // draw(gl);
-    this.setState({data: rand_arr, width:w, height: h})
+    this.gl.current.drawData(rand_arr, indices)
+    this.setState({data: rand_arr})
   }
 
   /**
@@ -46,7 +50,7 @@ class SortVisualizer3D extends React.Component{
   render(){
     return (
       <div>
-        <WebGL/>
+        <WebGL ref = {this.gl} cHeight = {this.state.height} cWidth = {this.state.width}/>
         {/*<canvas ref = {this.canvas} className = "3Dcanvas"
         style = {{height: this.state.height, width: this.state.width}}></canvas> */}
       </div>
