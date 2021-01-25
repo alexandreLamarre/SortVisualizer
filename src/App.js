@@ -1,10 +1,10 @@
-import logo from './logo.svg';
+import React from "react";
 import './App.css';
 import SortVisualizer from "./2D/SortVisualizer.js";
 import SortVisualizer3D from "./3D/SortVisualizer3D.js";
 
-function App() {
-  return (
+class App extends React.Component{
+  render(){return (
     <div className="App">
       <header className="App-header">
       <SortVisualizer/>
@@ -27,6 +27,7 @@ function App() {
       </header>
     </div>
   );
+}
 }
 
 export default App;

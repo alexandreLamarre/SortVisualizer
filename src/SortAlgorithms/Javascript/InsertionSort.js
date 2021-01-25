@@ -1,9 +1,14 @@
+var COMPARISONS;
+var WRITES;
+
 /**
 
 **/
 export default function getInsertionSortAnimations(rand_arr){
   const animations = [];
   const arr = rand_arr.slice();
+  COMPARISONS = 0;
+  WRITES = 0;
   insertionSortAnimate(arr, animations)
   return animations;
 }
@@ -18,13 +23,24 @@ function insertionSortAnimate(arr, animations){
     let j = i -1;
 
     while(j >= 0 && arr[j] > key){
-      animations.push({set: null, select: [j+1, j]});
+      COMPARISONS ++;
+      WRITES ++;
+      animations.push({
+        select: [j+1, j],
+        comparisons: COMPARISONS,
+        set:[j+1, arr[j]],
+        writes: WRITES,
+      });
       arr[j+1] = arr[j];
-      animations.push({set:[j+1, arr[j]], select: null});
       j = j - 1;
     }
-    animations.push({set: null, select: [j+1, i]});
+    WRITES ++;
+    animations.push({
+      select: [j+1, i],
+      set: [j+1, key],
+      writes: WRITES
+    });
     arr[j+1] = key;
-    animations.push({set: [j+1, key], select: null});
+
   }
 }

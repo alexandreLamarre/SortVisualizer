@@ -35,16 +35,16 @@ class SortVisualizer extends React.Component{
       running: false,
       algorithm: "Insertion",
       realTime: 0,
-      comparisons: 0,
-      swaps: 0,
-      mainWrites: 0,
-      auxWrites: 0,
       actionsPerTick: 5,
       animations: [],
       curAnimationsIndex: 0,
       language: "Javascript",
       paused: true,
       playerOpacity: 0.3,
+      comparisons: 0,
+      swaps: 0,
+      mainWrites: 0,
+      auxWrites: 0,
 
     };
     this.canvas = React.createRef();
@@ -275,6 +275,10 @@ class SortVisualizer extends React.Component{
 
   animate(rand_arr, w, h, animations, cur_index){
     const num_actions = this.state.actionsPerTick;
+    var comparisons = this.state.comparisons;
+    var mainWrites = this.state.mainWrites;
+    var auxWrites = this.state.auxWrites;
+    var swaps = this.state.swaps;
     if(this.state.running !== false && animations[cur_index] !== undefined
       && this.state.paused === false){
       for(let k = 0; k < num_actions; k++){
@@ -294,12 +298,23 @@ class SortVisualizer extends React.Component{
                     animations[cur_index].select !== undefined){
                       selected = animations[cur_index].select;
         }
+
+        if(animations[cur_index].writes) mainWrites = animations[cur_index].writes;
+        if(animations[cur_index].comparisons) comparisons = animations[cur_index].comparisons;
+        if(animations[cur_index].swaps) swaps = animations[cur_index].swaps;
+        if(animations[cur_index].auxWrites) auxWrites = animations[cur_index].auxWrites;
         cur_index ++;
         if(cur_index > animations.length-1) {
           this.setState({curAnimationsIndex: animations.length-1});
           break
         };
       }
+      this.setState({
+        comparisons: comparisons,
+        mainWrites: mainWrites,
+        auxWrites: auxWrites,
+        swaps: swaps,
+      });
       this.draw(rand_arr, w, h, selected, this.state.sorted_data);
       // continue animation when possible
       if(cur_index < animations.length) requestAnimationFrame( () => {
@@ -327,7 +342,10 @@ class SortVisualizer extends React.Component{
 
   updateElements(e){
     e.preventDefault();
-    const new_num_el = parseInt(e.target.value);
+    var new_num_el = parseInt(e.target.value);
+    if(!new_num_el) new_num_el = 128;
+    if(new_num_el < 128) new_num_el = 128;
+    if(new_num_el > 2048) new_num_el = 2048;
     const that = this;
     waitUpdateElements(new_num_el, that)
   }
@@ -342,14 +360,14 @@ class SortVisualizer extends React.Component{
       <div className = "sortContainer">
         <Draggable>
           <div className = "infoBox" hidden = {this.state.running === true}>
-          <p> Data Elements
+          <p> Data Elements (128-2048)
             <input disabled = {this.state.running === true}
             onChange = {(e) => this.updateElements(e)}
-              type = "range"
+              type = "number"
               min = {this.state.min_el}
               max = {this.state.max_el}
               value = {this.state.num_el}>
-            </input> {this.state.num_el}
+            </input>
             <button
             onClick = {() => this.resetData()}
             disabled = {this.state.running === true}>
@@ -387,7 +405,7 @@ class SortVisualizer extends React.Component{
               <optgroup label = "Non-Comparison Family">
                 <option value = "Counting"> Counting Sort </option>
                 <option value = "RadixLSD Base 4"> Radix LSD Sort, Base 4</option>
-                <option value = "RadixMSD Base 8"> Radix MSD Sort, Base 8</option>
+                <option hidden = {true} value = "RadixMSD Base 8"> Radix MSD Sort, Base 8</option>
                 <option disabled = {true} hidden = {true}> In Place Radix LSD Sort, Base 16</option>
               </optgroup>
               <optgroup label = "Hybrids">
