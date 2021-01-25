@@ -45,6 +45,7 @@ class SortVisualizer extends React.Component{
       swaps: 0,
       mainWrites: 0,
       auxWrites: 0,
+      frame: null,
 
     };
     this.canvas = React.createRef();
@@ -62,9 +63,9 @@ class SortVisualizer extends React.Component{
   componentDidMount(){
     const ctx = this.canvas.current.getContext("2d");
     const w = window.innerWidth;
-    const h = window.innerHeight;
+    const h = window.innerHeight*0.95;
     ctx.canvas.width = w;
-    ctx.canvas.height = h*0.95;
+    ctx.canvas.height = h;
 
     const rand_arr = [];
     for(let i = 0; i < this.state.num_el; i++){
@@ -74,6 +75,13 @@ class SortVisualizer extends React.Component{
 
     this.draw(rand_arr, w, h, [], sorted_arr);
     this.setState({data:rand_arr, width: w, height: h, sorted_data: sorted_arr});
+    window.addEventListener("resize", () => this.handleResize);
+  }
+
+  handleResize(){
+    const w = window.innerWidth;
+    const h = window.innerHeight*0.95;
+    this.setState({width: w, height: h})
   }
 
   drawScatter(rand_arr, w, h, selected){
@@ -317,8 +325,11 @@ class SortVisualizer extends React.Component{
       });
       this.draw(rand_arr, w, h, selected, this.state.sorted_data);
       // continue animation when possible
-      if(cur_index < animations.length) requestAnimationFrame( () => {
-                                            this.animate(rand_arr, w, h, animations, cur_index)})
+      if(cur_index < animations.length) {
+        var frame = requestAnimationFrame( () => {
+              this.animate(rand_arr, w, h, animations, cur_index)})
+              this.setState({frame:frame});
+          }
       }
       else{
         if(this.state.paused === true){
@@ -328,11 +339,11 @@ class SortVisualizer extends React.Component{
   }
 
   componentWillUnmount(){
-    this.clearAnimations();
+    if(this.state.frame) cancelAnimationFrame(this.state.frame);
   }
 
   clearAnimations(){
-    var id = this.state.maxtimeouts;
+    var id = this.state.frame;
     while(id){
       clearInterval(id);
       id --;
