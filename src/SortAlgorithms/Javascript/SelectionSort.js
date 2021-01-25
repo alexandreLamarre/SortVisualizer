@@ -1,9 +1,13 @@
+var SWAPS;
+var COMPARISONS;
 /**
 
 **/
 export default function getSelectionSortAnimations(rand_arr){
   const animations = [];
   const arr = rand_arr.slice();
+  SWAPS = 0;
+  COMPARISONS = 0;
   selectionSortAnimate(arr, animations)
   return animations;
 }
@@ -17,18 +21,20 @@ function selectionSortAnimate(arr, animations){
     var min = i;
 
     for(let j = i+ 1; j< arr.length; j++){
-      animations.push({select: [i,j]});
+      animations.push({select: [i,j], comparisons: ++COMPARISONS});
       if(arr[j] < arr[min]){
         min = j;
       }
     }
 
-    if(min !== i) swap(arr, min, i, animations);
+    if(min !== i) {
+      swap(arr, min, i, animations);
+    }
   }
 }
 
 function swap(arr, i, j, animations){
-  animations.push({swap: [i,j], select: [i,j]});
+  animations.push({swap: [i,j], select: [i,j], swaps: ++SWAPS});
   const temp = arr[i];
   const temp2 = arr[j];
   arr[i] = temp2;

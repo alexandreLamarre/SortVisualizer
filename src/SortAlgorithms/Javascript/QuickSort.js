@@ -1,11 +1,14 @@
+var SWAPS;
+var COMPARISONS;
 /**
 
 **/
 export default function getQuickSortAnimations(rand_arr){
   const arr = rand_arr.slice();
   const animations = [];
+  SWAPS = 0;
+  COMPARISONS = 0;
   quickSort(arr, 0, arr.length -1, animations);
-
   return animations;
 }
 
@@ -37,7 +40,12 @@ function partition(arr, l, r, animations){
       const temp2 = arr[i];
       arr[j] = temp2;
       arr[i] = temp;
-      animations.push({swap: [i,j], select: [i,j]});
+      animations.push({
+        swap: [i,j],
+        select: [i,j],
+        comparisons: ++COMPARISONS,
+        swaps: ++ SWAPS,
+      });
     }
   }
   //swap array[i+1] and arr[r]
@@ -45,6 +53,6 @@ function partition(arr, l, r, animations){
   const temp2 = arr[r];
   arr[i+1] = temp2;
   arr[r] = temp;
-  animations.push({swap: [i+1,r], select: [i+1,r]});
+  animations.push({swap: [i+1,r], select: [i+1,r], swaps: ++SWAPS});
   return (i + 1)
 }

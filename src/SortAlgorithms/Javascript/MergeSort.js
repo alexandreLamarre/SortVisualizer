@@ -1,3 +1,6 @@
+var WRITES;
+var COMPARISONS;
+
 /**
 
 **/
@@ -5,6 +8,8 @@ export default function getMergeSortAnimations(rand_arr){
   const animations = [];
   if(rand_arr.length <= 1) return animations;
   const auxiliary_array = rand_arr.slice();
+  WRITES = 0;
+  COMPARISONS = 0;
   mergeSortAnimate(rand_arr, 0, rand_arr.length-1, auxiliary_array, animations)
   return animations;
 }
@@ -38,7 +43,13 @@ function mergeSort(arr, l, pivot, r, auxiliary, animations){
   let j = pivot + 1;
 
   while(i <= pivot && j <= r){
-    animations.push({set: null, select: [i,j]});
+    COMPARISONS ++;
+    WRITES ++;
+    animations.push({
+      select: [i,j],
+      comparisons: COMPARISONS,
+      writes: WRITES,
+    });
 
     if(auxiliary[i] <= auxiliary[j]){
       animations.push({set: [k,auxiliary[i]], select: [i,k]});
@@ -51,12 +62,22 @@ function mergeSort(arr, l, pivot, r, auxiliary, animations){
   }
 
   while(i <= pivot){
-    animations.push({set: [k, auxiliary[i]], select: [i, k]});
+    WRITES ++;
+    animations.push({
+      set: [k, auxiliary[i]],
+      select: [i, k],
+      writes: WRITES,
+    });
     arr[k++] = auxiliary[i++];
   }
 
   while(j<= r){
-    animations.push({set: [k, auxiliary[j]], select: [j, k]});
+    WRITES ++;
+    animations.push({
+      set: [k, auxiliary[j]],
+      select: [j, k],
+      writes: WRITES,
+    });
     arr[k++] = auxiliary[j++];
   }
 }

@@ -1,9 +1,13 @@
+var SWAPS;
+var COMPARISONS;
 /**
 
 **/
 export default function getTernaryHeapSortAnimations(rand_arr){
   const arr = rand_arr.slice();
   const animations = [];
+  SWAPS = 0;
+  COMPARISONS = 0;
   ternaryHeapSort(arr, arr.length, animations);
   return animations;
 }
@@ -27,25 +31,28 @@ function ternaryHeapify(arr, n, i, animations){
   const r = 3*i + 3;
   if(l < n && arr[l] > arr[largest]) {
     largest = l;
-    animations.push({select:[l]});
+    animations.push({select:[l], comparisons: ++COMPARISONS});
   }
   if(r < n && arr[r] > arr[largest]) {
+    COMPARISONS += 2;
     largest = r;
-    animations.push({select: [r]});
+    animations.push({select: [r], comparisons: COMPARISONS});
   }
   if(m < n && arr[m] > arr[largest]){
+    COMPARISONS += 3;
     largest = m;
-    animations.push({select: [m]});
+    animations.push({select: [m], comparisons: COMPARISONS});
   }
 
   if(largest !== i){
+    COMPARISONS += 3;
     swap(arr, i , largest, animations);
     ternaryHeapify(arr, n, largest, animations);
   }
 }
 
 function swap(arr, i, j, animations){
-  animations.push({swap:[i,j], select: [i,j]});
+  animations.push({swap:[i,j], select: [i,j], swaps: ++SWAPS});
   const temp = arr[i];
   arr[i] = arr[j];
   arr[j] = temp;
