@@ -152,7 +152,7 @@ class SortVisualizer extends React.Component{
     const lookUpTable = {};
     var highlight = false;
     ctx.clearRect(0, 0, w, h);
-    const max_r = Math.min(w/2, h*0.95/2);
+    const max_r = Math.min(w/2, h*0.95/2)*0.95;
     const c = rand_arr.length;
     const center = {x:w/2,y:h*0.95/2-1};
     for(let i = 0; i < rand_arr.length; i++){
@@ -506,7 +506,7 @@ async function waitUpdateElements(val, that){
 async function waitStartAnimate(that, rand_arr, w, h, animations, time){
   await that.setState({running:true,
     mainWrites: 0, auxWrites: 0,
-    comparions: 0, realTime:time,
+    comparisons: 0, realTime:time,
     swaps: 0, animations: animations, paused:false,
     curAnimationsIndex: 0,});
   that.animate(rand_arr, w, h, animations, 0);

@@ -1,9 +1,13 @@
+var AUXWRITES;
+var WRITES;
 /**
 Base 4 Radix Least Significat Digit sort animations
 **/
 export default function getRadixSortLSDAnimations(rand_arr){
   const arr = rand_arr.slice();
   const animations = [];
+  AUXWRITES = 0;
+  WRITES = 0;
   radixSortLSD(arr, animations);
   return animations;
 }
@@ -31,6 +35,7 @@ function countingSortDigit(arr, radix, exponent, min, animations){
   var outputs = new Array(arr.length);
 
   for(let i =0; i < radix; i++){
+    animations.push({auxWrites: ++AUXWRITES});
     counts.push(0);
   }
 
@@ -46,11 +51,13 @@ function countingSortDigit(arr, radix, exponent, min, animations){
 
   for(let i = arr.length -1; i >= 0; i--){
     bucketIndex = Math.floor(((arr[i] -min)/exponent)%radix);
-    outputs[counts[bucketIndex]] = arr[i];
+    animations.push({auxWrites: ++AUXWRITES});
     counts[bucketIndex] --;
+    outputs[counts[bucketIndex]] = arr[i];
   }
+  console.log("outputs", outputs);
   for(let i = 0; i < arr.length; i++){
-    animations.push({set: [i, outputs[i]], select: [i]});
+    animations.push({set: [i, outputs[i]], select: [i], writes: ++WRITES});
     arr[i] = outputs[i];
   }
 
