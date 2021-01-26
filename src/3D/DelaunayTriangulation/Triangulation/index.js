@@ -14,5 +14,4 @@ export default class Triangulation{
     const t = new Triangle(v1,v2,v3);
     this.triangles.append(t);
   }
-
 }
