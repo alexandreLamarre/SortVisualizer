@@ -1,4 +1,80 @@
-# Getting Started with Create React App
+# Sort Algorithm Visualizer
+
+This is a web-app that visualizes 12+ common sorting algorithms using 1 and 2 dimensional data. It uses several different and interchangeable methods for data visualization.
+
+## Table of contents
+
+- [Visualization Types](#Visualization-Types)
+  - [2D](#2D)
+    - [Scatter Plot](#Scatter-plot)
+    - [Swirl Dots](#Swirl-dots)
+    - [Disparity Dots](#Disparity-dots)
+  - [3D](#3D)
+- [Algorithms](#Algorithms)
+  - [Summary](#Summary)
+  - **Insertion Family**
+    - [Insertion sort](#Insertion-sort)
+    - [Binary insertion sort](#Binary-insertion-sort)
+  - **Merge family**
+    - [Merge sort](#Merge-sort)
+  - **Selection family**
+    - [Selection sort](#Selection-sort)
+    - [Heap sort](#Heap-sort)
+    - [Ternary heap sort](#Ternary-heap-sort)
+  - **Exchange family**
+    - [Quick sort](#Quick-sort)
+    - [Dual pivot quick sort](#Dual-pivot-quick-sort)
+  - **Non-comparison family**
+    - [Counting sort](#Counting-sort)
+    - [Radix sort(base 4)](#Radix-sort)
+  - **Hybrid family**
+    - [Tim sort](#Tim-sort)
+    - [Intro sort](#Intro-sort)
+- [References](#References)
+
+### Visualization-Types
+
+### 2D
+- [Scatter plot](#Scatter-plot)
+- [Swirl dots](#Swirl-dots)
+- [Disparity dots](#Disparity-dots)
+
+#### Scatter plot
+
+#### Swirl dots
+
+#### Disparity dots
+
+#### 3D
+
+In progress.
+
+### Algorithms
+
+#### Summary
+
+| Algorithms | Time Complexity | Space Complexity | Stable | Approximate runtimes(2048)|
+| ---------- | :-------------: | :--------------: | :----: | :-----------------------: |
+| Insertion sort | O(n^2)      | O(n)| Yes | 139ms |
+| Binary insertion sort | O(n^2) | O(n) | Yes | 293ms |
+| Merge sort | O(nlog(n)) | O(n) | Yes | 15ms |
+| Selection sort | O(n^2) | O(n) | No | 226ms |
+| Heap sort | O(nlog(n)) | O(n) | Yes | 5ms |
+| Ternary heap sort | O(nlog(n)) | O(n) | Yes | 9ms |
+| Quick sort | O(n^2) | O(n) | No | 7ms |
+| Dual pivot quick sort | O(n^2) | O(n) | No | 6ms |
+| Counting sort | O(n+ k), k = possible values in array | O(n) | Yes | 2ms | 
+| Radix sort | O(nk) k = radix base | O(n) | Yes | 11ms |
+| Tim sort | O(nlog(n)) | O(n) | Yes | 13ms | 
+| Intro sort | O(nlog(n)) | O(n) | Yes | 6ms |
+
+### Refereces
+
+- Cormen, Thomas H., et al. **Introduction to algorithms**. MIT press, 2009.
+- Eberly, David. **3D game engine design: a practical approach to real-time computer graphics**. CRC Press, 2006.
+
+
+<!-- # Getting Started with Create React App
 
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
 
@@ -68,3 +144,5 @@ This section has moved here: [https://facebook.github.io/create-react-app/docs/d
 ### `yarn build` fails to minify
 
 This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+
+-->
