@@ -1,6 +1,9 @@
 # Sort Algorithm Visualizer
 
-This is a web-app that visualizes 12+ common sorting algorithms using 1 and 2 dimensional data. It uses several different and interchangeable methods for data visualization.
+In general, sorting algorithms take an array of numbers, usually integers, and sort them in ascending(or descending) order.
+
+This project is a web-app that visualizes 12+ common sorting algorithms using 1 and 2 dimensional data. It uses several different and interchangeable methods for data visualization.
+
 
 | Example of merge sort | Example of dual pivot quick sort | Example of tim sort | Example of radix sort |
 | :-------------------: | :------------------------------: | :-----------------: | :-------------------: |
