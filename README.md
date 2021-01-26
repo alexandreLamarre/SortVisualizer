@@ -2,6 +2,10 @@
 
 This is a web-app that visualizes 12+ common sorting algorithms using 1 and 2 dimensional data. It uses several different and interchangeable methods for data visualization.
 
+| Example of merge sort | Example of dual pivot quick sort | Example of tim sort | Example of radix sort |
+| :-------------------: | :------------------------------: | :-----------------: | :-------------------: |
+|                       |                                  |                     |                       |
+
 ## Table of contents
 
 - [Visualization Types](#Visualization-Types)
@@ -41,11 +45,33 @@ This is a web-app that visualizes 12+ common sorting algorithms using 1 and 2 di
 
 #### Scatter plot
 
+Scatter plots use cartesian coordinates to plot data. The data's value is plotted to the y axis and the data's index is plotted to the x axis.
+
+
+
+Random data (left) | Sorted data (right) |
+| :-------------:  | :-----------------: |
+|                  |                     |
+
 #### Swirl dots
+
+Swirl dots use polar coordinates to plot data. The data's values is plotted as a function of the radius and the data's index is plotted as the angle.
+
+Random data (left) | Sorted data (right) |
+| :-------------:  | :-----------------: |
+|                  |                     |
 
 #### Disparity dots
 
-#### 3D
+Disparity dots don't use a traditional coordinate system to plot data. The data's position, along the radius of the polar coordinate system, are plotted as the difference between their
+current position in the data array and the correct position in the sorted array. The data's position, along the angle of polar of the polar coordinate system is given by the data's index in the array.
+
+
+Random data (left) | Sorted data (right) |
+| :-------------:  | :-----------------: |
+|                  |                     |
+
+### 3D
 
 In progress.
 
@@ -53,22 +79,58 @@ In progress.
 
 #### Summary
 
-| Algorithms | Time Complexity | Space Complexity | Stable | Approximate runtimes(2048)|
-| ---------- | :-------------: | :--------------: | :----: | :-----------------------: |
-| Insertion sort | O(n^2)      | O(n)| Yes | 139ms |
-| Binary insertion sort | O(n^2) | O(n) | Yes | 293ms |
-| Merge sort | O(nlog(n)) | O(n) | Yes | 15ms |
-| Selection sort | O(n^2) | O(n) | No | 226ms |
-| Heap sort | O(nlog(n)) | O(n) | Yes | 5ms |
-| Ternary heap sort | O(nlog(n)) | O(n) | Yes | 9ms |
-| Quick sort | O(n^2) | O(n) | No | 7ms |
-| Dual pivot quick sort | O(n^2) | O(n) | No | 6ms |
-| Counting sort | O(n+ k), k = possible values in array | O(n) | Yes | 2ms | 
-| Radix sort | O(nk) k = radix base | O(n) | Yes | 11ms |
-| Tim sort | O(nlog(n)) | O(n) | Yes | 13ms | 
-| Intro sort | O(nlog(n)) | O(n) | Yes | 6ms |
+| Algorithms | Time Complexity | Space Complexity | Auxiliary Space Complexity |Stable | Approximate runtimes(2048)|
+| ---------- | :-------------: | :--------------: | :------------------------: | :----: | :-----------------------: |
+| Insertion sort | O(n^2)      | O(n)| O(1) | Yes | 139ms |
+| Binary insertion sort | O(n^2) | O(n) | O(1) | Yes | 293ms |
+| Merge sort | O(nlog(n)) | O(n) | O(1) | Yes | 15ms |
+| Selection sort | O(n^2) | O(n) | O(1) | No | 226ms |
+| Heap sort | O(nlog(n)) | O(n) | O(1) | Yes | 5ms |
+| Ternary heap sort | O(nlog(n)) | O(n) | O(1) | Yes | 9ms |
+| Quick sort | O(n^2) | O(n) | O(1) | No | 7ms |
+| Dual pivot quick sort | O(n^2) | O(n) | O(1) | No | 6ms |
+| Counting sort | O(n+ k), k = possible values in array | O(n) | O(n+k) | Yes | 2ms | 
+| Radix sort | O(nk) k = radix base | O(n) | O(n+k) | Yes | 11ms |
+| Tim sort | O(nlog(n)) | O(n) | O(1) | Yes | 13ms | 
+| Intro sort | O(nlog(n)) | O(n) | O(1) | Yes | 6ms |
 
-### Refereces
+### Insertion Family
+
+#### Insertion sort
+#### Binary insertion sort
+
+### Merge family
+
+#### Merge sort
+
+### Selection family
+
+#### Selection sort
+
+#### Heap sort
+
+#### Ternary heap sort
+
+### Exchange family
+
+#### Quick sort
+
+#### Dual pivot quick sort
+
+### Non-comparison family
+
+#### Counting sort
+
+#### Radix sort(base 4)
+
+### Hybrid family
+
+#### Tim sort
+
+#### Intro sort
+
+
+### References
 
 - Cormen, Thomas H., et al. **Introduction to algorithms**. MIT press, 2009.
 - Eberly, David. **3D game engine design: a practical approach to real-time computer graphics**. CRC Press, 2006.
