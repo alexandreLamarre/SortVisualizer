@@ -1,10 +1,14 @@
 # Sort Algorithm Visualizer
 
-This is a web-app that visualizes 12+ common sorting algorithms using 1 and 2 dimensional data. It uses several different and interchangeable methods for data visualization.
+In general, sorting algorithms take an array of numbers, usually integers, and sort them in ascending(or descending) order.
+
+This project is a web-app that visualizes 12+ common sorting algorithms using 1 and 2 dimensional data. It uses several different and interchangeable methods for data visualization.
+
 
 | Example of merge sort | Example of dual pivot quick sort | Example of tim sort | Example of radix sort |
 | :-------------------: | :------------------------------: | :-----------------: | :-------------------: |
-|                       |                                  |                     |                       |
+| <video controls = "true"> <source src ="./examples/mergesort.mp4" type = "video/mp4"/></video>|<video controls = "true"> <source src ="./examples/dualquicksort.mp4" type = "video/mp4"/></video>|<video controls = "true"> <source src ="./examples/timsort.mp4" type = "video/mp4"/></video>|
+<video controls = "true"> <source src ="./examples/radixsort.mp4" type = "video/mp4"/></video>|
 
 ## Table of contents
 
@@ -51,7 +55,7 @@ Scatter plots use cartesian coordinates to plot data. The data's value is plotte
 
 Random data (left) | Sorted data (right) |
 | :-------------:  | :-----------------: |
-|                  |                     |
+|<img src="./examples/scatterRandom.jpg">|<img src="./examples/scatterSorted.jpg">|
 
 #### Swirl dots
 
@@ -59,7 +63,7 @@ Swirl dots use polar coordinates to plot data. The data's values is plotted as a
 
 Random data (left) | Sorted data (right) |
 | :-------------:  | :-----------------: |
-|                  |                     |
+| <img src = "./examples/swirlRandom.jpg" >| <img src ="./examples/swirlSorted.jpg">                     |
 
 #### Disparity dots
 
@@ -69,7 +73,7 @@ current position in the data array and the correct position in the sorted array.
 
 Random data (left) | Sorted data (right) |
 | :-------------:  | :-----------------: |
-|                  |                     |
+| <img src = "./examples/disparityRandom.jpg"> | <img src="./examples/disparitySorted.jpg">|
 
 ### 3D
 
