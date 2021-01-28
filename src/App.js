@@ -7,7 +7,7 @@ class App extends React.Component{
   render(){return (
     <div className="App">
       <header className="App-header">
-      <SortVisualizer/>
+      <SortVisualizer3D/>
       {/*
       <SortVisualizer/>
 

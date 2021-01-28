@@ -1,6 +1,7 @@
 import React from "react";
 import WebGL from "./WebGL";
 
+import Delaunay from "./\/DelaunayTriangulation";
 import "./SortVisualizer3D.css";
 
 require("react-dom");
@@ -34,6 +35,8 @@ class SortVisualizer3D extends React.Component{
         indices.push(i*200+j);
       }
     }
+    console.log(Delaunay.triangulate(rand_arr).triangles);
+    console.log(rand_arr.length);
     // draw(gl);
     this.gl.current.drawData(rand_arr, indices)
     this.setState({data: rand_arr})
