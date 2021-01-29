@@ -13,9 +13,10 @@ var Y_AXIS = new THREE.Vector3(0,1,0);
 var X_AXIS = new THREE.Vector3(1,0,0);
 var Z_AXIS = new THREE.Vector3(0,0,1);
 const CENTER = [0.5, 0.5, 0.5]
-var ANGLE_X = 0;
-var ANGLE_Y = 0;
+var ANGLE_X = Math.PI/4;
+var ANGLE_Y = Math.PI/4;
 var ANGLE_Z = 0;
+var R = 2;
 
 
 class SortVisualizer3D extends React.Component{
@@ -48,7 +49,7 @@ class SortVisualizer3D extends React.Component{
     var zMin = Infinity;
     var zMax = -Infinity;
     var iMin = Infinity;
-    var iMax =Infinity;
+    var iMax = -Infinity;
     for(let i = 0; i < range; i++){
         positions.push([parseInt(Math.random()*range), parseInt(Math.random()*range), null]);
         positions[i][2] = this.hEval(positions[i][0], positions[i][1]);
@@ -85,7 +86,7 @@ class SortVisualizer3D extends React.Component{
     var scene = new THREE.Scene();
     var camera = new THREE.PerspectiveCamera(75, w/h, 0.1, 1000);
     var pointLight = new THREE.PointLight( 0xffffff , 1);
-    camera.position.set(0.5,0.5,2);
+    camera.position.set(1,1, 1.5);
     pointLight.position.set(1,1,2);
     camera.add(pointLight)
     camera.lookAt(new THREE.Vector3(...CENTER));
@@ -159,7 +160,7 @@ class SortVisualizer3D extends React.Component{
     for(let i = 0; i < positions.length; i++){
       const avg = (positions[i][0] + positions[i][1])/(2)
       const heuristic_prediction = this.hEval(i,i)
-      arr.push([avg, heuristic_prediction]);
+      arr.push([positions[i][0], positions[i][1]]);
     }
 
     return arr;
@@ -174,9 +175,12 @@ class SortVisualizer3D extends React.Component{
     for(let i = 0; i < arr.length; i++){
       const avg = (arr[i][0]+arr[i][1])/(2*c) ;
       const fValue = (this.hEval(i,i) -imin)/(imax-imin);
+      console.log(this.hEval(i,i))
+      console.log(imax)
+      console.log(fValue);
       const index = (arr[i][2]-fmin)/(2*(fmax-fmin));
       pos_arr.push(
-        [avg, index, fValue]
+        [arr[i][1]/c, (arr[i][2]-fmin)/(2*fmax-2*fmin), arr[i][0]/(c) ]
       );
     }
     return pos_arr;
@@ -187,7 +191,7 @@ class SortVisualizer3D extends React.Component{
   **/
   hEval(x,y){
     if(y === 0) return 1;
-    return Math.pow(x,2)+1/y;
+    return Math.pow(x,2) - Math.pow(y,2)
   }
 
   rewriteDataValues(arr){
@@ -212,21 +216,25 @@ class SortVisualizer3D extends React.Component{
 
   /**[MISNOMER] move this camera back and forth based on difference of onMouse
   positions on drags **/
-  rotateCamera(e, deltaX, deltaY){
+  rotateCamera(e,rot){
     const camera = this.state.camera;
     const center = [0.5, 0.5, 0.5]
-
+    var x = camera.position.x;
+    var y = camera.position.y;
+    var z = camera.position.z;
+    const speed = 0.01;
     const r = calculateRadius(camera.position.x, camera.position.y, camera.position.z, center);
-    if(deltaX > 0){
-      camera.position.x = r*Math.cos(ANGLE_X)-0.5;
-      ANGLE_X += 0.01;
+    if(rot< 0){
+      camera.position.x = x *Math.cos(speed) + z * Math.sin(speed);
+      camera.position.z = z * Math.cos(speed) - x * Math.sin(speed);
+
     }
-    if(deltaY > 0) {
-      camera.position.y = 0.5+r* Math.sin(ANGLE_Y);
-      ANGLE_Y += 0.01;
+    if(rot > 0) {
+      camera.position.x = x * Math.cos(speed) - z * Math.sin(speed);
+      camera.position.z = z * Math.cos(speed) + x * Math.sin(speed);
     }
-    camera.lookAt(new THREE.Vector3(...center))
     console.log(camera.position)
+    camera.lookAt(new THREE.Vector3(...center))
     this.state.renderer.render(this.state.scene, this.state.camera);
   }
 
@@ -242,8 +250,8 @@ class SortVisualizer3D extends React.Component{
       <div>
         <canvas ref = {this.canvas} style = {{outline: "1px solid white"}}
         onWheel = {(e) => this.zoomCamera(e)}/>
-        <button onClick = {(e) => this.rotateCamera(e, 1, 0)}> RotateY </button>
-        <button onClick = {(e) => this.rotateCamera(e, 0, 1)}> RotateY </button>
+        <button onMouseDown = {(e) => this.rotateCamera(e, 1)}> Rotate- </button>
+        <button onMouseDown = {(e) => this.rotateCamera(e, -1)}> Rotate+ </button>
         {/*<canvas ref = {this.canvas} className = "3Dcanvas"
         style = {{height: this.state.height, width: this.state.width}}></canvas> */}
       </div>
