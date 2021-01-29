@@ -2,11 +2,11 @@ import Locations from './locations';
 
 export default `
     precision mediump float;
-    
+
     varying vec2 pass_textureCoords;
     varying vec3 surfaceNormal;
     varying vec3 lightVector;
-    
+
     uniform sampler2D ${Locations.DIFFUSE_TEXTURE};
     uniform int ${Locations.HAS_DIFFUSE_TEXTURE};
 

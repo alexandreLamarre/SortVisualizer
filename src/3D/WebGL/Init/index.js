@@ -8,7 +8,7 @@ import Material from '../Materials/material';
 import Camera from '../Camera';
 import MouseEvent from '../EventHandlers/mouse';
 
-export default (id) => {
+export default (id, data, triangle_indices) => {
     const canvas = document.querySelector(`#${id}`);
 
     if(!canvas) {
@@ -26,6 +26,7 @@ export default (id) => {
 
     const vertices = Cube.vertices;
     const indices = Cube.indices;
+    console.log("gl data", vertices, indices);
     const normals = [];
     const textureCoords = [];
 
@@ -35,7 +36,7 @@ export default (id) => {
     const material = new Material();
     material.addDiffuse(require('../resources/testimage.png'));
 
-    const modelType = new ModelType(vertices, indices, normals, textureCoords);
+    const modelType = new ModelType(vertices, indices);
     modelType.addMaterial(material);
 
     modelRender.registerNewModel(modelType, 'cube');
@@ -47,10 +48,11 @@ export default (id) => {
 
     const render = () => {
         GLC.clear(1.0, 1.0, 1.0, 1.0);
-        instance.updateRotation(0, 1, 0);
+        instance.updateRotation(0, 0, 0);
         modelRender.render(light, camera);
         window.requestAnimationFrame(render);
     }
+
 
     window.requestAnimationFrame(render);
 }

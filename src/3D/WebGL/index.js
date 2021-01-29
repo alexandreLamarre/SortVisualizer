@@ -8,12 +8,12 @@ export default class WebGL extends React.Component {
 
     }
 
-    drawData(data, indices){
-      init("webgl", data, indices);
+    drawData(){
+      init("mycanvas");
     }
 
     render(){
-        return <canvas id="webgl" width = {this.props.cWidth}
-        height = {this.props.cHeight} style={{ border: '1px solid black'}}></canvas>
+        return <canvas id="mycanvas" width = {this.props.cWidth}
+        height = {this.props.cHeight} style={{ border: '1px solid white'}}></canvas>
     }
 }
