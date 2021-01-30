@@ -101,11 +101,62 @@ In progress.
 ### Insertion Family
 
 #### Insertion sort
+
+Pseudocode: 
+
+``` 
+insertionSort(A):
+  for i = 1 to length(A):
+    let key = A[i]
+    let j = i
+    
+    while(j > 0 and A[j-1] > key):
+      A[j] = A[j-1]
+      j--
+     
+     A[j] = key
+  
+```
 #### Binary insertion sort
+
+Pseudocode:
+
+``` 
+binaryInsertionSort(A):
+  for i = 1 to length(A):
+    let key = A[i]
+    let j = i
+    
+    let pivot = binarySearch(A[0:j], key)
+    while(j > 0 and j >= pivot):
+      A[j] = A[j-1]
+      j--
+    
+    A[j] = key
+    
+binarySearch(A, value):
+  let pivot = length(A)/2
+  
+  if(A[pivot] === value) return pivot
+  if(A[pivot] < value) binarySearch(A[pivot+1:length(A)])
+  if(A[pivot] > value) binarySearch(A[0:pivot])
+```
 
 ### Merge family
 
 #### Merge sort
+
+Pseudocode:
+
+``` 
+mergeSort(A):
+  let pivot = length(A)/2
+  mergeSort(A[0:pivot])
+  mergeSort(A[pivot:-1])
+  
+  return mergeA[0:pivot], A[pivot:-1])
+  
+```
 
 ### Selection family
 
