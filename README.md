@@ -162,15 +162,130 @@ mergeSort(A):
 
 #### Selection sort
 
+Pseudocode:
+
+``` 
+selectionSort(A):
+  for i = 1 to length(A):
+    let min = i
+    
+    for j = i+1 to n:
+      if(A[j] < A[min]):
+        min = j
+    
+    if min != i :
+      swap(A[min], A[i])
+  
+```
+
 #### Heap sort
 
+Pseudocode:
+
+```
+heapSort(A):
+  buildMaxHeap(A)
+  sort(A)
+
+buildMaxHeap(A):
+  for i = length(A)/2 -1 to 1:
+    heapify(A, length(A), i)
+
+sort(A):
+  for i = length(A) - 1 to 1:
+    swap(A[0], A[i])
+    heapify(A, i, 0)
+    
+heapify(A, size, i):
+  let largest = i
+  let left = 2*i + 1
+  let right = 2*i + 2
+  if(left < size and A[left] > A[largest]):
+    largest = left;
+  if(right < size and A[right] > A[largest]):
+    largest = right;
+  if(largest != i):
+    swap(A, i, largest)
+    heapify(A, size, largest)
+```
+
 #### Ternary heap sort
+
+Pseudocode:
+
+``` 
+ternaryHeapSort(A):
+  buildMaxHeap(A)
+  sort(A)
+
+buildMaxHeap(A):
+  for let i = n/3 to 0:
+    ternaryHeapify(A, length(A), i-1)
+    
+sort(A):
+  for i = length(A)-1 to 1:
+    swap(A[0], A[i])
+    ternaryHeapify(A, i, 0)
+
+ternaryHeapify(A, size, i):
+  let largest = i
+  let left = 3*i + 1
+  let middle = 3*i + 2
+  let right =  3*i + 3
+  
+  if left < size and A[left] > A[largest]:
+    largest = left
+  if right < size and A[right] > A[largest]:
+    largest = right
+  if middle < size and A[middle] > A[largest]:
+    largest = middle
+  if(largest != i):
+    swap(A[i], A[largest])
+    ternaryHeapify(A, size, largest)
+  
+```
 
 ### Exchange family
 
 #### Quick sort
 
+Pseudocode:
+
+```
+quickSort(A):
+  if length(A) <= 1: return
+  
+  pivot = partition(A) 
+  
+  quickSort(A[0:pivot])
+  quickSort(A[pivot:-1])
+
+partition(A):
+  let pivot = choosePivot(A)//  choose a pivot using some algorithm/heurisitic
+  
+  let i = 0
+  for j = 1 to length(A)-1:
+    if(A[j] < pivot):
+      i++
+      swap(A[j], A[i])
+      
+  swap(A[i+1], A[-1])
+```
+
 #### Dual pivot quick sort
+
+``` 
+dualQuickSort(A):
+  pivot1, pivot2 = partition(A) //choose two pivots and swap as necessary 
+  
+  dualQuickSort(A[0:pivot1])
+  dualQuickSort(A[pivot1:pivot2])
+  dualQuickSort(A[pivot2:-1])
+
+
+partition(A):
+  
+```
 
 ### Non-comparison family
 
